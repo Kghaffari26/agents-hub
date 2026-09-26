@@ -1,11 +1,17 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { data } from './helpers';
 
 test('macro: indicators, revision badge, yield curve, FOMC diff', async ({ page }) => {
   await page.goto('macro/');
   await expect(page.getByTestId('regime-strip')).toBeVisible();
   await expect(page.locator('[data-testid^="indicator-card-"]').first()).toBeVisible();
-  await expect(page.getByTestId('revision-badge').first()).toBeVisible();
+  // Revisions only exist on some days (fixtures have them; a live run may not).
+  const revised = data<{ indicators: { revision: unknown }[] }>('macro/latest.json').indicators.filter(
+    (i) => i.revision,
+  ).length;
+  if (revised) await expect(page.getByTestId('revision-badge').first()).toBeVisible();
+  else await expect(page.getByTestId('revision-badge')).toHaveCount(0);
   await page.getByRole('status').filter({ hasText: 'Loading yield curve' }).scrollIntoViewIfNeeded();
   await expect(page.getByTestId('yield-curve')).toBeVisible();
   const diff = page.getByTestId('statement-diff');

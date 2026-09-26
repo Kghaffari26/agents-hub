@@ -10,6 +10,7 @@ const ROOT = 'test/fixtures';
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
+    if (dir === ROOT && f === 'real') return []; // real agent output: see real-fixtures.test.ts
     const p = path.join(dir, f);
     return statSync(p).isDirectory() ? walk(p) : p.endsWith('.json') ? [p] : [];
   });

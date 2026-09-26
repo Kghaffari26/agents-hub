@@ -39,18 +39,29 @@ export type Source = z.infer<typeof source>;
 
 const tierUsage = z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() });
 
-export const runMeta = z.object({
-  agent: z.string(),
-  schema_version: z.string().regex(/^\d+\.\d+\.\d+$/, 'expected semver'),
-  run_id: z.string(),
-  started_at: timestamp,
-  finished_at: timestamp,
-  status: runStatus,
-  data_changed: z.boolean(),
-  cost_usd: z.number().nonnegative(),
-  model_usage: z.object({ fast: tierUsage, smart: tierUsage }),
-  sources: z.array(source),
-});
+/**
+ * agents-core `RunMeta` — the `meta` block of every `latest.json`.
+ *
+ * Tracks agents-core v0.1.0 (schema_version 1.0.0) and is forward-compatible with v0.2.0
+ * (schema_version 1.1.0): optional `warnings`, and agent-specific extra meta fields pass through
+ * untouched (e.g. repo_maint's `github_requests`). Only the major is enforced (`assertMajor`);
+ * the §6 bodies stay exact.
+ */
+export const runMeta = z
+  .object({
+    agent: z.string(),
+    schema_version: z.string().regex(/^\d+\.\d+\.\d+$/, 'expected semver'),
+    run_id: z.string(),
+    started_at: timestamp,
+    finished_at: timestamp,
+    status: runStatus,
+    data_changed: z.boolean(),
+    cost_usd: z.number().nonnegative(),
+    model_usage: z.object({ fast: tierUsage, smart: tierUsage }),
+    sources: z.array(source),
+    warnings: z.array(z.string()).optional(),
+  })
+  .passthrough();
 export type RunMeta = z.infer<typeof runMeta>;
 
 export const keyStat = z.object({

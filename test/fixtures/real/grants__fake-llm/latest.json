@@ -1,0 +1,916 @@
+{
+ "meta": {
+  "agent": "grants",
+  "schema_version": "1.0.0",
+  "run_id": "2026-09-26T21-31-26Z-536e82",
+  "started_at": "2026-09-26T21:31:26Z",
+  "finished_at": "2026-09-26T21:31:27Z",
+  "status": "ok",
+  "data_changed": true,
+  "cost_usd": 0.056875,
+  "model_usage": {
+   "fast": {
+    "input_tokens": 13000,
+    "output_tokens": 1950
+   },
+   "smart": {
+    "input_tokens": 13000,
+    "output_tokens": 1950
+   }
+  },
+  "sources": [
+   {
+    "name": "SAM.gov Contract Opportunities",
+    "url": "https://sam.gov/",
+    "retrieved_at": "2026-09-26T21:31:26Z"
+   },
+   {
+    "name": "Grants.gov",
+    "url": "https://www.grants.gov/",
+    "retrieved_at": "2026-09-26T21:31:26Z"
+   }
+  ],
+  "sam_budget_exhausted": false,
+  "sam_requests_used": 3
+ },
+ "headline": "6 new matches today; 2 close within 14 days. Top: Sources Sought for Engineering, Sustainment, and Integration Support Services f… (Dept Of Defense), fit 79.",
+ "key_stats": [
+  {
+   "label": "New matches today",
+   "value": 6.0,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "neutral"
+  },
+  {
+   "label": "Closing ≤ 14 days",
+   "value": 2.0,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "neutral"
+  },
+  {
+   "label": "Active matches",
+   "value": 6.0,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "up"
+  },
+  {
+   "label": "Top fit",
+   "value": 79.0,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "up"
+  }
+ ],
+ "profile": {
+  "id": "default",
+  "name": "Small software consultancy",
+  "naics": [
+   "541511",
+   "541512"
+  ],
+  "set_asides_eligible": [
+   "Total Small Business (SBA)",
+   "Partial Small Business (SBP)"
+  ],
+  "keywords_preview": [
+   "software development",
+   "web application",
+   "data pipeline",
+   "cloud migration"
+  ],
+  "profile_hash": "a872b5bff1c4375305eb2c0314cfa38761bbcce5e1a93c7e44156e4d8825f4a1"
+ },
+ "thresholds": {
+  "relevance": 25,
+  "pursue": 75,
+  "consider": 55
+ },
+ "stats": {
+  "new_since_last_run": 6,
+  "closing_within_14d": 2,
+  "active_matches": 6,
+  "largest_value": null,
+  "fetched": {
+   "sam": 1000,
+   "grants_gov": 354
+  },
+  "rejected": {
+   "deadline": 153,
+   "type": 0,
+   "agency_excluded": 0,
+   "set_aside": 63,
+   "eligibility": 13,
+   "value": 1,
+   "place": 0,
+   "negative_keyword": 29
+  },
+  "below_relevance": 989,
+  "llm_scored_this_run": 13,
+  "llm_scored_cached": 0
+ },
+ "top_matches": [
+  {
+   "id": "sam:b40f4fe5e3844441abc75d7dcbbb5737",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "sources_sought",
+   "notice_type_label": "Sources Sought",
+   "title": "Sources Sought for Engineering, Sustainment, and Integration Support Services for LATTICE-FORTRESS Systems from Anduril Industries, Inc.",
+   "solicitation_number": "W911QX26RA049",
+   "agency": "DEPT OF DEFENSE",
+   "office": "W6QK ACC-APG ADELPHI",
+   "naics": [
+    "541512"
+   ],
+   "psc": "DA01",
+   "set_aside_label": null,
+   "posted_date": "2026-09-25",
+   "deadline": "2026-09-29T11:59:00-04:00",
+   "days_left": 3,
+   "place": "Aberdeen Proving Ground, MD",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/b40f4fe5e3844441abc75d7dcbbb5737/view",
+   "fit": 79,
+   "sub_scores": {
+    "capability": 34,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 7
+   },
+   "recommendation": "Pursue",
+   "confidence": "medium",
+   "reasons": [
+    "Software modernization scope"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "DEPT OF DEFENSE wants help with Sources Sought for Engineering, Sustainment, and Integration Support Services for LATTICE-FORTRESS Systems from Anduril Industries, Inc..",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:142b8ca6abf247cba525b16ab72079fa",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "sources_sought",
+   "notice_type_label": "Sources Sought",
+   "title": "RFI: Air Force Enterprise Rapid Operations Support (AEROS)",
+   "solicitation_number": "AEROS",
+   "agency": "DEPT OF DEFENSE",
+   "office": "FA2318  AFLCMC C3MK",
+   "naics": [
+    "541512"
+   ],
+   "psc": "DA01",
+   "set_aside_label": "Small Business Set Aside - Total",
+   "posted_date": "2026-09-25",
+   "deadline": "2026-09-30T17:00:00-04:00",
+   "days_left": 4,
+   "place": "0, IL",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/142b8ca6abf247cba525b16ab72079fa/view",
+   "fit": 79,
+   "sub_scores": {
+    "capability": 34,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 7
+   },
+   "recommendation": "Pursue",
+   "confidence": "medium",
+   "reasons": [
+    "Software modernization scope"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "DEPT OF DEFENSE wants help with RFI: Air Force Enterprise Rapid Operations Support (AEROS).",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:49ba69c7b8344d72a15adb8057028af2",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "sources_sought",
+   "notice_type_label": "Sources Sought",
+   "title": "Travel Management Office (TMO) Travel Program (Defense Travel System (DTS) & Government Travel Charge Card (GTCC)) and Mail Management Center (MMC) Technical and Administrative Support Services.",
+   "solicitation_number": "N0003026JV001",
+   "agency": "DEPT OF DEFENSE",
+   "office": "PAE STRATEGIC SYSTEMS PROGRAMS",
+   "naics": [
+    "541519"
+   ],
+   "psc": "R699",
+   "set_aside_label": "Small Business Set Aside - Total",
+   "posted_date": "2026-09-25",
+   "deadline": "2026-10-13T10:00:00-04:00",
+   "days_left": 17,
+   "place": "Washington Navy Yard, DC",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/49ba69c7b8344d72a15adb8057028af2/view",
+   "fit": 79,
+   "sub_scores": {
+    "capability": 34,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 7
+   },
+   "recommendation": "Pursue",
+   "confidence": "medium",
+   "reasons": [
+    "Software modernization scope"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "DEPT OF DEFENSE wants help with Travel Management Office (TMO) Travel Program (Defense Travel System (DTS) & Government Travel Charge Card (GTCC)) and Mail Management Center (MMC) Technical and Administrative Support Services..",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "gg:359270",
+   "source": "grants_gov",
+   "kind": "grant",
+   "notice_type": "grant_posted",
+   "notice_type_label": "Grant (posted)",
+   "title": "PRIMED-AI: Data-to-Model Academic-Industrial Partnerships (D2M-AIP) for Precision Medicine with AI: Integrating Imaging with Multimodal Data (UG3/UH3 Clinical Trial Optional)",
+   "solicitation_number": "RFA-RM-27-012",
+   "agency": "National Institutes of Health",
+   "office": null,
+   "naics": [],
+   "psc": null,
+   "set_aside_label": null,
+   "posted_date": "2026-06-30",
+   "deadline": "2026-10-19T23:59:00-04:00",
+   "days_left": 23,
+   "place": null,
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://www.grants.gov/search-results-detail/359270",
+   "fit": 79,
+   "sub_scores": {
+    "capability": 34,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 7
+   },
+   "recommendation": "Pursue",
+   "confidence": "medium",
+   "reasons": [
+    "Software modernization scope"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "National Institutes of Health wants help with PRIMED-AI: Data-to-Model Academic-Industrial Partnerships (D2M-AIP) for Precision Medicine with AI: Integrating Imaging with Multimodal Data (UG3/UH3 Clinical Trial Optional).",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "gg:359666",
+   "source": "grants_gov",
+   "kind": "grant",
+   "notice_type": "grant_posted",
+   "notice_type_label": "Grant (posted)",
+   "title": "Model-to-Clinic (M2C) for Precision Medicine with AI: Integrating Imaging with Multimodal Data (PRIMED-AI) (UG3/UH3, Clinical Trial Optional)",
+   "solicitation_number": "RFA-RM-27-013",
+   "agency": "National Institutes of Health",
+   "office": null,
+   "naics": [],
+   "psc": null,
+   "set_aside_label": null,
+   "posted_date": "2026-06-30",
+   "deadline": "2026-10-19T23:59:00-04:00",
+   "days_left": 23,
+   "place": null,
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://www.grants.gov/search-results-detail/359666",
+   "fit": 79,
+   "sub_scores": {
+    "capability": 34,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 7
+   },
+   "recommendation": "Pursue",
+   "confidence": "medium",
+   "reasons": [
+    "Software modernization scope"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "National Institutes of Health wants help with Model-to-Clinic (M2C) for Precision Medicine with AI: Integrating Imaging with Multimodal Data (PRIMED-AI) (UG3/UH3, Clinical Trial Optional).",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "gg:363945",
+   "source": "grants_gov",
+   "kind": "grant",
+   "notice_type": "grant_forecasted",
+   "notice_type_label": "Grant (forecasted)",
+   "title": "Continuation of the Exceptional Longevity Data Management and Coordinating Center (EL DMCC) (U24 Clinical Trial Not Allowed)",
+   "solicitation_number": "RFA-AG-27-004",
+   "agency": "National Institutes of Health",
+   "office": null,
+   "naics": [],
+   "psc": null,
+   "set_aside_label": null,
+   "posted_date": "2026-09-24",
+   "deadline": null,
+   "days_left": null,
+   "place": null,
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://www.grants.gov/search-results-detail/363945",
+   "fit": 79,
+   "sub_scores": {
+    "capability": 34,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 7
+   },
+   "recommendation": "Pursue",
+   "confidence": "medium",
+   "reasons": [
+    "Software modernization scope"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "National Institutes of Health wants help with Continuation of the Exceptional Longevity Data Management and Coordinating Center (EL DMCC) (U24 Clinical Trial Not Allowed).",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:b157b435b869474ab93f3a21d53fd6b8",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "combined_synopsis_solicitation",
+   "notice_type_label": "Combined Synopsis/Solicitation",
+   "title": "Sole-Source Justification for My Talking Books (RealSAM) Dialog Licenses",
+   "solicitation_number": "2027-NLS-0066",
+   "agency": "LIBRARY OF CONGRESS",
+   "office": "CONTRACTS SERVICES",
+   "naics": [
+    "541511"
+   ],
+   "psc": "9999",
+   "set_aside_label": "No Set aside used",
+   "posted_date": "2026-09-24",
+   "deadline": "2026-09-30T17:00:00-04:00",
+   "days_left": 4,
+   "place": "Washington, DC",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/b157b435b869474ab93f3a21d53fd6b8/view",
+   "fit": 48,
+   "sub_scores": {
+    "capability": 8,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 2
+   },
+   "recommendation": "Pass",
+   "confidence": "medium",
+   "reasons": [
+    "Outside core capability"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "LIBRARY OF CONGRESS wants help with Sole-Source Justification for My Talking Books (RealSAM) Dialog Licenses.",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:4a725981797c41d184bd87986fb25eed",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "combined_synopsis_solicitation",
+   "notice_type_label": "Combined Synopsis/Solicitation",
+   "title": "MALDI Biotyper Sirius RUO equipment service agreement",
+   "solicitation_number": "1232SA26Q1529",
+   "agency": "AGRICULTURE, DEPARTMENT OF",
+   "office": "USDA ARS AFM APD",
+   "naics": [
+    "541690"
+   ],
+   "psc": "J066",
+   "set_aside_label": null,
+   "posted_date": "2026-09-25",
+   "deadline": "2026-10-05T12:00:00-05:00",
+   "days_left": 9,
+   "place": "Ames, IA",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/4a725981797c41d184bd87986fb25eed/view",
+   "fit": 48,
+   "sub_scores": {
+    "capability": 8,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 2
+   },
+   "recommendation": "Pass",
+   "confidence": "medium",
+   "reasons": [
+    "Outside core capability"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "AGRICULTURE, DEPARTMENT OF wants help with MALDI Biotyper Sirius RUO equipment service agreement.",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:6c0dc91d0e854834a137db90bd8a8e4f",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "sources_sought",
+   "notice_type_label": "Sources Sought",
+   "title": "Endpoint Security Event Management",
+   "solicitation_number": "842674854",
+   "agency": "DEPT OF DEFENSE",
+   "office": "IT CONTRACTING DIVISION - PL84",
+   "naics": [
+    "541519"
+   ],
+   "psc": "DJ01",
+   "set_aside_label": "No Set aside used",
+   "posted_date": "2026-09-25",
+   "deadline": "2026-10-09T15:00:00-04:00",
+   "days_left": 13,
+   "place": "Fort Huachuca, AZ",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/6c0dc91d0e854834a137db90bd8a8e4f/view",
+   "fit": 48,
+   "sub_scores": {
+    "capability": 8,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 2
+   },
+   "recommendation": "Pass",
+   "confidence": "medium",
+   "reasons": [
+    "Outside core capability"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "DEPT OF DEFENSE wants help with Endpoint Security Event Management.",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:d44c649ffb3e4dbf989d77342db4ecb3",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "sources_sought",
+   "notice_type_label": "Sources Sought",
+   "title": "MC CBRN Request For Information",
+   "solicitation_number": "FA800326R0016",
+   "agency": "DEPT OF DEFENSE",
+   "office": "FA8003  771 ENTERPRISE SOURCING SQ",
+   "naics": [
+    "541690"
+   ],
+   "psc": "R499",
+   "set_aside_label": "Small Business Set Aside - Total",
+   "posted_date": "2026-09-25",
+   "deadline": "2026-10-09T15:00:00-04:00",
+   "days_left": 13,
+   "place": "Falls Church, VA",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/d44c649ffb3e4dbf989d77342db4ecb3/view",
+   "fit": 48,
+   "sub_scores": {
+    "capability": 8,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 2
+   },
+   "recommendation": "Pass",
+   "confidence": "medium",
+   "reasons": [
+    "Outside core capability"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "DEPT OF DEFENSE wants help with MC CBRN Request For Information.",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:ecddc343e9e54573a4addb13db7dec59",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "presolicitation",
+   "notice_type_label": "Presolicitation",
+   "title": "Geospatial Intelligence (GEOINT) Architecture Information Technology (IT)",
+   "solicitation_number": "W50NH9-26-R-A019",
+   "agency": "DEPT OF DEFENSE",
+   "office": "W6QK ACC- DTA",
+   "naics": [
+    "541519"
+   ],
+   "psc": "DA01",
+   "set_aside_label": "No Set aside used",
+   "posted_date": "2026-09-24",
+   "deadline": "2026-10-09T15:00:00-04:00",
+   "days_left": 13,
+   "place": "Fort Gordon, GA",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/ecddc343e9e54573a4addb13db7dec59/view",
+   "fit": 48,
+   "sub_scores": {
+    "capability": 8,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 2
+   },
+   "recommendation": "Pass",
+   "confidence": "medium",
+   "reasons": [
+    "Outside core capability"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "DEPT OF DEFENSE wants help with Geospatial Intelligence (GEOINT) Architecture Information Technology (IT).",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:9e6dbeeda1db42ff8325d4edba04c38e",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "combined_synopsis_solicitation",
+   "notice_type_label": "Combined Synopsis/Solicitation",
+   "title": "Respirator Fit Testing",
+   "solicitation_number": "36C24527Q0010",
+   "agency": "VETERANS AFFAIRS, DEPARTMENT OF",
+   "office": "245-NETWORK CONTRACT OFFICE 5 (36C245)",
+   "naics": [
+    "541690"
+   ],
+   "psc": "H265",
+   "set_aside_label": "Small Business Set Aside - Total",
+   "posted_date": "2026-09-24",
+   "deadline": "2026-10-12T15:00:00-04:00",
+   "days_left": 16,
+   "place": "Clarksburg, WV",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/9e6dbeeda1db42ff8325d4edba04c38e/view",
+   "fit": 48,
+   "sub_scores": {
+    "capability": 8,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 2
+   },
+   "recommendation": "Pass",
+   "confidence": "medium",
+   "reasons": [
+    "Outside core capability"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "VETERANS AFFAIRS, DEPARTMENT OF wants help with Respirator Fit Testing.",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  },
+  {
+   "id": "sam:cd569c94222d45a186f1d55045e7fe81",
+   "source": "sam",
+   "kind": "contract",
+   "notice_type": "sources_sought",
+   "notice_type_label": "Sources Sought",
+   "title": "TTS for DTB Pilot - Request for Information",
+   "solicitation_number": "2027-NLS-0075",
+   "agency": "LIBRARY OF CONGRESS",
+   "office": "CONTRACTS SERVICES",
+   "naics": [
+    "541511"
+   ],
+   "psc": "DA01",
+   "set_aside_label": null,
+   "posted_date": "2026-09-24",
+   "deadline": "2026-10-12T17:00:00-04:00",
+   "days_left": 16,
+   "place": "Washington, DC",
+   "value": {
+    "kind": "none",
+    "amount": null,
+    "floor": null
+   },
+   "url": "https://sam.gov/opp/cd569c94222d45a186f1d55045e7fe81/view",
+   "fit": 48,
+   "sub_scores": {
+    "capability": 8,
+    "eligibility": 18,
+    "size": 8,
+    "timeline": 12,
+    "strategic": 2
+   },
+   "recommendation": "Pass",
+   "confidence": "medium",
+   "reasons": [
+    "Outside core capability"
+   ],
+   "red_flags": [],
+   "is_new": true,
+   "changed": false,
+   "summary": {
+    "what_they_want": "LIBRARY OF CONGRESS wants help with TTS for DTB Pilot - Request for Information.",
+    "why_fit": [
+     "Matches core software work"
+    ],
+    "risks": [
+     "Scope details are in the attachments"
+    ],
+    "next_steps": [
+     "Read the notice and attachments",
+     "Confirm SAM registration"
+    ],
+    "narrative_source": "llm",
+    "model": "claude-sonnet-5",
+    "generated_at": "2026-09-26T21:31:26Z"
+   }
+  }
+ ],
+ "deadlines_30d": [
+  {
+   "id": "sam:b40f4fe5e3844441abc75d7dcbbb5737",
+   "title": "Sources Sought for Engineering, Sustainment, and Integration Support Services for LATTICE-FORTRESS Systems from Anduril Industries, Inc.",
+   "deadline": "2026-09-29T11:59:00-04:00",
+   "recommendation": "Pursue",
+   "fit": 79
+  },
+  {
+   "id": "sam:142b8ca6abf247cba525b16ab72079fa",
+   "title": "RFI: Air Force Enterprise Rapid Operations Support (AEROS)",
+   "deadline": "2026-09-30T17:00:00-04:00",
+   "recommendation": "Pursue",
+   "fit": 79
+  },
+  {
+   "id": "sam:49ba69c7b8344d72a15adb8057028af2",
+   "title": "Travel Management Office (TMO) Travel Program (Defense Travel System (DTS) & Government Travel Charge Card (GTCC)) and Mail Management Center (MMC) Technical and Administrative Support Services.",
+   "deadline": "2026-10-13T10:00:00-04:00",
+   "recommendation": "Pursue",
+   "fit": 79
+  },
+  {
+   "id": "gg:359270",
+   "title": "PRIMED-AI: Data-to-Model Academic-Industrial Partnerships (D2M-AIP) for Precision Medicine with AI: Integrating Imaging with Multimodal Data (UG3/UH3 Clinical Trial Optional)",
+   "deadline": "2026-10-19T23:59:00-04:00",
+   "recommendation": "Pursue",
+   "fit": 79
+  },
+  {
+   "id": "gg:359666",
+   "title": "Model-to-Clinic (M2C) for Precision Medicine with AI: Integrating Imaging with Multimodal Data (PRIMED-AI) (UG3/UH3, Clinical Trial Optional)",
+   "deadline": "2026-10-19T23:59:00-04:00",
+   "recommendation": "Pursue",
+   "fit": 79
+  }
+ ],
+ "sources": [
+  {
+   "name": "SAM.gov Contract Opportunities",
+   "url": "https://sam.gov/"
+  },
+  {
+   "name": "Grants.gov",
+   "url": "https://www.grants.gov/"
+  }
+ ],
+ "disclaimer": "Automated screening. Always read the official notice and attachments before acting."
+}

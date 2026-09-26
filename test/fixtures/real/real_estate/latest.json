@@ -1,0 +1,2047 @@
+{
+ "meta": {
+  "agent": "real_estate",
+  "schema_version": "1.0.0",
+  "run_id": "2026-09-26T21-28-14Z-2ce437",
+  "started_at": "2026-09-26T21:28:14Z",
+  "finished_at": "2026-09-26T21:28:17Z",
+  "status": "ok",
+  "data_changed": false,
+  "cost_usd": 0.0,
+  "model_usage": {
+   "fast": {
+    "input_tokens": 0,
+    "output_tokens": 0
+   },
+   "smart": {
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  "sources": [
+   {
+    "name": "Redfin metro market tracker",
+    "url": "https://redfin-public-data.s3.us-west-2.amazonaws.com/redfin_market_tracker/redfin_metro_market_tracker.tsv000.gz",
+    "retrieved_at": "2026-09-26T21:28:14Z"
+   },
+   {
+    "name": "Redfin national market tracker",
+    "url": "https://redfin-public-data.s3.us-west-2.amazonaws.com/redfin_market_tracker/us_national_market_tracker.tsv000.gz",
+    "retrieved_at": "2026-09-26T21:28:14Z"
+   },
+   {
+    "name": "Zillow ZHVI",
+    "url": "https://files.zillowstatic.com/research/public_csvs/zhvi/Metro_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv",
+    "retrieved_at": "2026-09-26T21:28:14Z"
+   },
+   {
+    "name": "Zillow ZORI",
+    "url": "https://files.zillowstatic.com/research/public_csvs/zori/Metro_zori_uc_sfrcondomfr_sm_month.csv",
+    "retrieved_at": "2026-09-26T21:28:14Z"
+   },
+   {
+    "name": "FRED",
+    "url": "https://fred.stlouisfed.org/",
+    "retrieved_at": "2026-09-26T21:28:14Z"
+   }
+  ]
+ },
+ "headline": "Inventory down 9% YoY nationally; 28 of 50 metros have more price cuts than a year ago.",
+ "key_stats": [
+  {
+   "label": "US median sale price",
+   "value": 449846.0,
+   "format": "currency_compact",
+   "delta": 0.022072973728276324,
+   "delta_format": "percent_signed",
+   "good_direction": "neutral"
+  },
+  {
+   "label": "30-yr mortgage",
+   "value": 7.03,
+   "format": "percent",
+   "delta": 0.08,
+   "delta_format": "pp_signed",
+   "good_direction": "neutral"
+  }
+ ],
+ "data_through": "2026-05-31",
+ "rates_as_of": "2026-09-24",
+ "metric_registry": [
+  {
+   "key": "median_sale_price",
+   "label": "Median sale price",
+   "format": "currency",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": "Not seasonally adjusted, so compare YoY"
+  },
+  {
+   "key": "homes_sold",
+   "label": "Homes sold",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "up",
+   "source": "redfin",
+   "note": null
+  },
+  {
+   "key": "new_listings",
+   "label": "New listings",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": null
+  },
+  {
+   "key": "inventory",
+   "label": "Active inventory",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": null
+  },
+  {
+   "key": "months_of_supply",
+   "label": "Months of supply",
+   "format": "decimal1",
+   "change_kind": "diff",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": "< 3 favors sellers, > 6 favors buyers"
+  },
+  {
+   "key": "median_dom",
+   "label": "Median days on market",
+   "format": "days",
+   "change_kind": "diff",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": null
+  },
+  {
+   "key": "avg_sale_to_list",
+   "label": "Sale-to-list ratio",
+   "format": "percent",
+   "change_kind": "pp",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": null
+  },
+  {
+   "key": "sold_above_list",
+   "label": "Sold above list",
+   "format": "percent",
+   "change_kind": "pp",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": "Share of sales"
+  },
+  {
+   "key": "price_drops",
+   "label": "Listings with price drops",
+   "format": "percent",
+   "change_kind": "pp",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": "Share of active listings"
+  },
+  {
+   "key": "off_market_in_two_weeks",
+   "label": "Off market in 2 weeks",
+   "format": "percent",
+   "change_kind": "pp",
+   "good_direction": "neutral",
+   "source": "redfin",
+   "note": "Speed signal"
+  },
+  {
+   "key": "zhvi",
+   "label": "Zillow Home Value Index",
+   "format": "currency",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "zillow",
+   "note": "Smoothed and seasonally adjusted, mid-tier"
+  },
+  {
+   "key": "zori",
+   "label": "Zillow Observed Rent Index",
+   "format": "currency",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "zillow",
+   "note": "Monthly rent"
+  },
+  {
+   "key": "permits_total",
+   "label": "Building permits (units)",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "census_bps",
+   "note": "Monthly units authorized"
+  },
+  {
+   "key": "permits_1unit",
+   "label": "Single-family permits",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "census_bps",
+   "note": null
+  },
+  {
+   "key": "permits_5plus",
+   "label": "5+ unit permits",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "census_bps",
+   "note": "Multifamily pipeline"
+  },
+  {
+   "key": "mortgage30",
+   "label": "30-yr fixed mortgage rate",
+   "format": "percent",
+   "change_kind": "diff",
+   "good_direction": "neutral",
+   "source": "fred",
+   "note": null
+  },
+  {
+   "key": "mortgage15",
+   "label": "15-yr fixed mortgage rate",
+   "format": "percent",
+   "change_kind": "diff",
+   "good_direction": "neutral",
+   "source": "fred",
+   "note": null
+  },
+  {
+   "key": "housing_starts",
+   "label": "Housing starts",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "fred",
+   "note": "Thousands, SAAR"
+  },
+  {
+   "key": "permits_national",
+   "label": "Building permits (national)",
+   "format": "count",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "fred",
+   "note": "Thousands, SAAR"
+  },
+  {
+   "key": "case_shiller",
+   "label": "Case-Shiller Home Price Index",
+   "format": "decimal1",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "fred",
+   "note": "Index, NSA, about a 2-month lag"
+  },
+  {
+   "key": "median_price_new_and_existing",
+   "label": "Median sale price (new + existing)",
+   "format": "currency",
+   "change_kind": "ratio",
+   "good_direction": "neutral",
+   "source": "fred",
+   "note": "Quarterly"
+  }
+ ],
+ "national": {
+  "latest": {
+   "median_sale_price": {
+    "value": 449846.0,
+    "yoy": 0.022072973728276324,
+    "mom": 0.017626805774860088,
+    "delta_format": "percent_signed",
+    "trend_3m": "up",
+    "high_36m": true,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "homes_sold": {
+    "value": 464811.0,
+    "yoy": -0.0455920248862971,
+    "mom": 0.04070241272456965,
+    "delta_format": "percent_signed",
+    "trend_3m": "up",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "new_listings": {
+    "value": 648351.0,
+    "yoy": -0.0689133725288581,
+    "mom": -0.05913774863844734,
+    "delta_format": "percent_signed",
+    "trend_3m": "up",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "inventory": {
+    "value": 1460440.0,
+    "yoy": -0.089616463751782,
+    "mom": -0.005353806882921197,
+    "delta_format": "percent_signed",
+    "trend_3m": "up",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "months_of_supply": {
+    "value": 3.142008895,
+    "yoy": -0.1519412029999998,
+    "mom": -0.14548360100000002,
+    "delta_format": "months_signed",
+    "trend_3m": "down",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "median_dom": {
+    "value": 42.0,
+    "yoy": 2.0,
+    "mom": -5.0,
+    "delta_format": "days_signed",
+    "trend_3m": "down",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "avg_sale_to_list": {
+    "value": 0.9932163736,
+    "yoy": -0.0003344793999999762,
+    "mom": 0.0026001254999999945,
+    "delta_format": "pp_signed",
+    "trend_3m": "up",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "sold_above_list": {
+    "value": 0.3045901779,
+    "yoy": -0.006752537900000022,
+    "mom": 0.01445308179999999,
+    "delta_format": "pp_signed",
+    "trend_3m": "up",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "price_drops": {
+    "value": 0.2004402118,
+    "yoy": 0.014203604600000003,
+    "mom": 0.017479199299999998,
+    "delta_format": "pp_signed",
+    "trend_3m": "up",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "off_market_in_two_weeks": {
+    "value": 0.4107471314,
+    "yoy": 0.011304857800000012,
+    "mom": 0.004327815700000015,
+    "delta_format": "pp_signed",
+    "trend_3m": "up",
+    "high_36m": false,
+    "low_36m": false,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "zhvi": {
+    "value": null,
+    "yoy": null,
+    "mom": null,
+    "delta_format": "percent_signed",
+    "trend_3m": null,
+    "high_36m": null,
+    "low_36m": null,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   },
+   "zori": {
+    "value": null,
+    "yoy": null,
+    "mom": null,
+    "delta_format": "percent_signed",
+    "trend_3m": null,
+    "high_36m": null,
+    "low_36m": null,
+    "pct_rank": null,
+    "yoy_pct_rank": null
+   }
+  },
+  "temperature": {
+   "score": 59,
+   "label": "Balanced",
+   "basis": "vs its own 3-year history"
+  },
+  "series": {
+   "dates": [
+    "2024-06-30",
+    "2024-07-31",
+    "2024-08-31",
+    "2024-09-30",
+    "2024-10-31",
+    "2024-11-30",
+    "2024-12-31",
+    "2025-01-31",
+    "2025-02-28",
+    "2025-03-31",
+    "2025-04-30",
+    "2025-05-31",
+    "2025-06-30",
+    "2025-07-31",
+    "2025-08-31",
+    "2025-09-30",
+    "2025-10-31",
+    "2025-11-30",
+    "2025-12-31",
+    "2026-01-31",
+    "2026-02-28",
+    "2026-03-31",
+    "2026-04-30",
+    "2026-05-31"
+   ],
+   "median_sale_price": [
+    442531.0,
+    437821.0,
+    432661.0,
+    428313.0,
+    434438.0,
+    430335.0,
+    426609.0,
+    418780.0,
+    425499.0,
+    431625.0,
+    438104.0,
+    440131.0,
+    445716.0,
+    443118.0,
+    439563.0,
+    435564.0,
+    439838.0,
+    433425.0,
+    427803.0,
+    422852.0,
+    429061.0,
+    436487.0,
+    442054.0,
+    449846.0
+   ],
+   "inventory": [
+    1343178.0,
+    1363961.0,
+    1381121.0,
+    1413768.0,
+    1409600.0,
+    1336857.0,
+    1186597.0,
+    1244073.0,
+    1297453.0,
+    1383223.0,
+    1501893.0,
+    1604203.0,
+    1635700.0,
+    1645237.0,
+    1611025.0,
+    1607914.0,
+    1598901.0,
+    1487023.0,
+    1288076.0,
+    1306140.0,
+    1336670.0,
+    1393358.0,
+    1468301.0,
+    1460440.0
+   ],
+   "median_dom": [
+    35.0,
+    37.0,
+    39.0,
+    43.0,
+    44.0,
+    46.0,
+    54.0,
+    59.0,
+    58.0,
+    49.0,
+    42.0,
+    40.0,
+    41.0,
+    43.0,
+    47.0,
+    51.0,
+    51.0,
+    53.0,
+    60.0,
+    67.0,
+    67.0,
+    55.0,
+    47.0,
+    42.0
+   ],
+   "price_drops": [
+    0.1708167171,
+    0.1843665772,
+    0.1800580644,
+    0.1764005667,
+    0.1776187117,
+    0.1606823304,
+    0.1226649291,
+    0.1637284785,
+    0.1576881173,
+    0.1697145756,
+    0.1763300537,
+    0.1862366072,
+    0.1936441908,
+    0.2000009181,
+    0.1882370397,
+    0.1908757192,
+    0.2014298579,
+    0.1596997388,
+    0.1277932181,
+    0.1602636321,
+    0.1538193437,
+    0.1705682876,
+    0.1829610125,
+    0.2004402118
+   ],
+   "avg_sale_to_list": [
+    0.9988755173,
+    0.9961170451,
+    0.9924481323,
+    0.990496038,
+    0.98940357,
+    0.9876056123,
+    0.9848887253,
+    0.9823109451,
+    0.985042693,
+    0.988573676,
+    0.992249659,
+    0.993550853,
+    0.992898897,
+    0.9903240713,
+    0.9878906852,
+    0.9860863107,
+    0.985075912,
+    0.9840403658,
+    0.9816073952,
+    0.9793259452,
+    0.9824103046,
+    0.9870417652,
+    0.9906162481,
+    0.9932163736
+   ],
+   "months_of_supply": [
+    2.84780044,
+    2.811996582,
+    2.921610332,
+    3.428288799,
+    3.237704164,
+    3.43304006,
+    2.908124267,
+    4.07661607,
+    3.929394954,
+    3.405269694,
+    3.370204167,
+    3.293950098,
+    3.30818297,
+    3.413495133,
+    3.459282042,
+    3.601926385,
+    3.55500302,
+    4.06990355,
+    3.048787971,
+    4.604757089,
+    4.167634208,
+    3.341292209,
+    3.287492496,
+    3.142008895
+   ],
+   "homes_sold": [
+    471655.0,
+    485051.0,
+    472726.0,
+    412383.0,
+    435370.0,
+    389409.0,
+    408028.0,
+    305173.0,
+    330192.0,
+    406201.0,
+    445639.0,
+    487015.0,
+    494441.0,
+    481980.0,
+    465711.0,
+    446404.0,
+    449761.0,
+    365371.0,
+    422488.0,
+    283650.0,
+    320726.0,
+    417012.0,
+    446632.0,
+    464811.0
+   ],
+   "new_listings": [
+    608441.0,
+    585341.0,
+    572160.0,
+    541258.0,
+    533547.0,
+    404894.0,
+    302286.0,
+    485881.0,
+    496937.0,
+    630437.0,
+    682658.0,
+    696338.0,
+    624208.0,
+    604761.0,
+    547665.0,
+    557104.0,
+    559191.0,
+    383645.0,
+    296157.0,
+    457990.0,
+    482466.0,
+    630513.0,
+    689103.0,
+    648351.0
+   ]
+  },
+  "rates": {
+   "dates": [
+    "2026-04-16",
+    "2026-04-23",
+    "2026-04-30",
+    "2026-05-07",
+    "2026-05-14",
+    "2026-05-21",
+    "2026-05-28",
+    "2026-06-04",
+    "2026-06-11",
+    "2026-06-18",
+    "2026-06-25",
+    "2026-07-02",
+    "2026-07-09",
+    "2026-07-16",
+    "2026-07-23",
+    "2026-07-30",
+    "2026-08-06",
+    "2026-08-13",
+    "2026-08-20",
+    "2026-08-27",
+    "2026-09-03",
+    "2026-09-10",
+    "2026-09-17",
+    "2026-09-24"
+   ],
+   "mortgage30": [
+    6.3,
+    6.23,
+    6.3,
+    6.37,
+    6.36,
+    6.51,
+    6.53,
+    6.48,
+    6.52,
+    6.47,
+    6.49,
+    6.43,
+    6.49,
+    6.55,
+    6.58,
+    6.66,
+    6.69,
+    6.67,
+    6.65,
+    6.66,
+    6.71,
+    6.76,
+    6.95,
+    7.03
+   ],
+   "mortgage15": [
+    5.65,
+    5.58,
+    5.64,
+    5.72,
+    5.71,
+    5.85,
+    5.87,
+    5.79,
+    5.84,
+    5.81,
+    5.84,
+    5.79,
+    5.82,
+    5.93,
+    5.96,
+    6.04,
+    6.01,
+    5.96,
+    5.95,
+    5.98,
+    6.04,
+    6.09,
+    6.26,
+    6.42
+   ],
+   "latest": {
+    "mortgage30": 7.03,
+    "mortgage30_change_1w_pp": 0.08,
+    "mortgage30_year_ago": 6.3
+   }
+  },
+  "construction": {
+   "housing_starts": {
+    "value": 1275.0,
+    "mom": -0.025974025974025983,
+    "units": "thousands, SAAR",
+    "period": "2026-08-01"
+   },
+   "permits": {
+    "value": 1403.0,
+    "mom": -0.020935101186322358,
+    "units": "thousands, SAAR",
+    "period": "2026-08-01"
+   },
+   "series": {
+    "dates": [
+     "2024-09-01",
+     "2024-10-01",
+     "2024-11-01",
+     "2024-12-01",
+     "2025-01-01",
+     "2025-02-01",
+     "2025-03-01",
+     "2025-04-01",
+     "2025-05-01",
+     "2025-06-01",
+     "2025-07-01",
+     "2025-08-01",
+     "2025-09-01",
+     "2025-10-01",
+     "2025-11-01",
+     "2025-12-01",
+     "2026-01-01",
+     "2026-02-01",
+     "2026-03-01",
+     "2026-04-01",
+     "2026-05-01",
+     "2026-06-01",
+     "2026-07-01",
+     "2026-08-01"
+    ],
+    "housing_starts": [
+     1357.0,
+     1370.0,
+     1300.0,
+     1494.0,
+     1353.0,
+     1491.0,
+     1346.0,
+     1400.0,
+     1289.0,
+     1379.0,
+     1432.0,
+     1291.0,
+     1319.0,
+     1273.0,
+     1319.0,
+     1378.0,
+     1385.0,
+     1346.0,
+     1522.0,
+     1414.0,
+     1182.0,
+     1439.0,
+     1309.0,
+     1275.0
+    ],
+    "permits": [
+     1421.0,
+     1435.0,
+     1512.0,
+     1467.0,
+     1463.0,
+     1446.0,
+     1492.0,
+     1445.0,
+     1416.0,
+     1399.0,
+     1400.0,
+     1347.0,
+     1444.0,
+     1418.0,
+     1414.0,
+     1482.0,
+     1393.0,
+     1540.0,
+     1363.0,
+     1423.0,
+     1410.0,
+     1374.0,
+     1433.0,
+     1403.0
+    ]
+   }
+  },
+  "case_shiller": {
+   "value": 336.663,
+   "yoy": 0.015253087257429687,
+   "period": "2026-06-01"
+  },
+  "brief": {
+   "text": "As of May 2026, the U.S. median sale price stood at $449,846, up 2.2% year over year, while inventory fell 9.0% to 1,460,440 listings. Homes are taking a median of 42 days to sell, two days longer than a year ago, and the share of listings with price drops rose to 20.0%, up 1.4pp. Among the top alerts, 22 metros saw monthly payments rise at least 10% year over year, and 4 metros recorded inventory declines of 24% year over year. The 30-year mortgage rate is 7.03%, up 0.08pp from a week earlier and above the 6.3% level of a year ago. Nationally, 28 of the 50 tracked metros now have more price cuts than a year ago, and the overall market temperature reads Balanced with a score of 59.",
+   "key_points": [
+    "Median sale price up 2.2% year over year to $449,846.",
+    "Inventory down 9.0% year over year; days on market rose 2 days.",
+    "Mortgage rate at 7.03%, up from 6.3% a year ago."
+   ],
+   "citations": [
+    {
+     "name": "Redfin Data Center",
+     "url": "https://www.redfin.com/news/data-center/",
+     "attribution": "Data: Redfin, a national real estate brokerage."
+    },
+    {
+     "name": "FRED, Federal Reserve Bank of St. Louis",
+     "url": "https://fred.stlouisfed.org/",
+     "attribution": null
+    }
+   ],
+   "narrative_source": "llm",
+   "model": "claude-sonnet-5",
+   "generated_at": "2026-09-26T18:02:56.733197Z",
+   "reused": true
+  }
+ },
+ "metros": [
+  {
+   "slug": "houston-tx",
+   "name": "Houston, TX",
+   "cbsa": "26420",
+   "lat": 29.801005,
+   "lon": -95.34262,
+   "homes_sold_12m": 87272,
+   "latest": {
+    "median_sale_price": {
+     "value": 345000.0,
+     "yoy": 0.023738872403560762,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "homes_sold": {
+     "value": 7905.0,
+     "yoy": -0.11843425894948145,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "new_listings": {
+     "value": 12447.0,
+     "yoy": -0.09908801389693112,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "inventory": {
+     "value": 32910.0,
+     "yoy": -0.1142511102139685,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "months_of_supply": {
+     "value": 4.2,
+     "yoy": 0.10000000000000053,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "median_dom": {
+     "value": 49.0,
+     "yoy": 7.0,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "avg_sale_to_list": {
+     "value": 0.966392384,
+     "yoy": -0.005196236599999904,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "sold_above_list": {
+     "value": 0.1443390259,
+     "yoy": -0.006436038199999994,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "price_drops": {
+     "value": 0.3688240656,
+     "yoy": 0.0225718788,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "off_market_in_two_weeks": {
+     "value": 0.2894960534,
+     "yoy": 0.017299556500000035,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zhvi": {
+     "value": 307175.43260270456,
+     "yoy": -0.02033002499573433,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zori": {
+     "value": 1636.9367577482376,
+     "yoy": -0.007020614529917979,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "permits_total": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_1unit": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_5plus": {
+     "value": null,
+     "yoy_12m": null
+    }
+   },
+   "temperature": {
+    "score": 20,
+    "label": "Cool",
+    "basis": null
+   },
+   "market_type": "Balanced",
+   "flags": [
+    "payment_jump"
+   ],
+   "brief_excerpt": "Houston's housing market remains balanced as of May 2026",
+   "stale": false
+  },
+  {
+   "slug": "atlanta-ga",
+   "name": "Atlanta, GA",
+   "cbsa": "12060",
+   "lat": 33.732402,
+   "lon": -84.392848,
+   "homes_sold_12m": 76904,
+   "latest": {
+    "median_sale_price": {
+     "value": 405000.0,
+     "yoy": 0.012499999999999956,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "homes_sold": {
+     "value": 7142.0,
+     "yoy": -0.06591681925189641,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "new_listings": {
+     "value": 9679.0,
+     "yoy": -0.13286149435585015,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "inventory": {
+     "value": 26672.0,
+     "yoy": -0.15211240741329435,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "months_of_supply": {
+     "value": 3.7,
+     "yoy": -0.39999999999999947,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "median_dom": {
+     "value": 43.0,
+     "yoy": 2.0,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "avg_sale_to_list": {
+     "value": 0.9840858633,
+     "yoy": 0.0002500840000000393,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "sold_above_list": {
+     "value": 0.22066648,
+     "yoy": -0.012788921499999995,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "price_drops": {
+     "value": 0.3257723455,
+     "yoy": 0.02103889980000001,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "off_market_in_two_weeks": {
+     "value": 0.2455112219,
+     "yoy": 0.0028784963000000052,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zhvi": {
+     "value": 378747.6721286659,
+     "yoy": -0.021368865023475236,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zori": {
+     "value": 1828.900404545911,
+     "yoy": 0.014645868378908355,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "permits_total": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_1unit": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_5plus": {
+     "value": null,
+     "yoy_12m": null
+    }
+   },
+   "temperature": {
+    "score": 34,
+    "label": "Cool",
+    "basis": null
+   },
+   "market_type": "Balanced",
+   "flags": [
+    "rent_outpacing"
+   ],
+   "brief_excerpt": "Atlanta's May 2026 market shows rent growth outpacing home values, a key imbalance",
+   "stale": false
+  },
+  {
+   "slug": "chicago-il",
+   "name": "Chicago, IL",
+   "cbsa": "16980",
+   "lat": 41.75878,
+   "lon": -87.841887,
+   "homes_sold_12m": 74827,
+   "latest": {
+    "median_sale_price": {
+     "value": 397500.0,
+     "yoy": 0.05718085106382986,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "homes_sold": {
+     "value": 7147.0,
+     "yoy": -0.0420855113255596,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "new_listings": {
+     "value": 9740.0,
+     "yoy": -0.014868008496004892,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "inventory": {
+     "value": 19846.0,
+     "yoy": -0.05224450811843362,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "months_of_supply": {
+     "value": 2.8,
+     "yoy": 0.0,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "median_dom": {
+     "value": 46.0,
+     "yoy": -1.0,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "avg_sale_to_list": {
+     "value": 1.011475718,
+     "yoy": 0.006680742999999989,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "sold_above_list": {
+     "value": 0.4824401847,
+     "yoy": 0.00824101570000002,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "price_drops": {
+     "value": 0.1432026605,
+     "yoy": -0.012145954600000008,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "off_market_in_two_weeks": {
+     "value": 0.5476138592,
+     "yoy": 0.00895719220000002,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zhvi": {
+     "value": 353069.5213992949,
+     "yoy": 0.04367509972735517,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zori": {
+     "value": 2187.9905127534716,
+     "yoy": 0.053317175394103744,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "permits_total": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_1unit": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_5plus": {
+     "value": null,
+     "yoy_12m": null
+    }
+   },
+   "temperature": {
+    "score": 86,
+    "label": "Hot",
+    "basis": null
+   },
+   "market_type": "Seller's market",
+   "flags": [
+    "price_36m_high",
+    "payment_jump"
+   ],
+   "brief_excerpt": "Chicago's median sale price hit a 36-month high of $397,500 in May 2026, up 5.7% year-over-year, while monthly payments surged 14% annually",
+   "stale": false
+  },
+  {
+   "slug": "phoenix-az",
+   "name": "Phoenix, AZ",
+   "cbsa": "38060",
+   "lat": 33.185765,
+   "lon": -112.067862,
+   "homes_sold_12m": 69365,
+   "latest": {
+    "median_sale_price": {
+     "value": 469000.0,
+     "yoy": 0.002136752136752129,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "homes_sold": {
+     "value": 6783.0,
+     "yoy": 0.043377941855099245,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "new_listings": {
+     "value": 7173.0,
+     "yoy": -0.11071162906025289,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "inventory": {
+     "value": 23918.0,
+     "yoy": -0.11266926358746054,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "months_of_supply": {
+     "value": 3.5,
+     "yoy": -0.5999999999999996,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "median_dom": {
+     "value": 61.0,
+     "yoy": 4.0,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "avg_sale_to_list": {
+     "value": 0.9805198095,
+     "yoy": -0.0006531840000000289,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "sold_above_list": {
+     "value": 0.1475748194,
+     "yoy": 0.0035969697999999883,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "price_drops": {
+     "value": 0.3293753658,
+     "yoy": -0.009745390999999992,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "off_market_in_two_weeks": {
+     "value": 0.2160843771,
+     "yoy": 0.022943825700000003,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zhvi": {
+     "value": 445131.35640629986,
+     "yoy": -0.017338223395539698,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zori": {
+     "value": 1716.7823899298019,
+     "yoy": -0.0034156227300388142,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "permits_total": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_1unit": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_5plus": {
+     "value": null,
+     "yoy_12m": null
+    }
+   },
+   "temperature": {
+    "score": 24,
+    "label": "Cool",
+    "basis": null
+   },
+   "market_type": "Balanced",
+   "flags": [],
+   "brief_excerpt": "Phoenix's inventory declined 11.3% year-over-year to 23,918 homes, reflecting tightening supply",
+   "stale": false
+  },
+  {
+   "slug": "dallas-tx",
+   "name": "Dallas, TX",
+   "cbsa": "19100",
+   "lat": 32.849171,
+   "lon": -96.970489,
+   "homes_sold_12m": 62069,
+   "latest": {
+    "median_sale_price": {
+     "value": 425000.0,
+     "yoy": 0.024443215112586403,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "homes_sold": {
+     "value": 5733.0,
+     "yoy": -0.0835997442455243,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "new_listings": {
+     "value": 8345.0,
+     "yoy": -0.15416582201500106,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "inventory": {
+     "value": 24274.0,
+     "yoy": -0.11955023576351109,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "months_of_supply": {
+     "value": 4.2,
+     "yoy": -0.20000000000000018,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "median_dom": {
+     "value": 47.0,
+     "yoy": 1.0,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "avg_sale_to_list": {
+     "value": 0.9782238489,
+     "yoy": -0.0006513518999999857,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "sold_above_list": {
+     "value": 0.166753881,
+     "yoy": 0.009624725,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "price_drops": {
+     "value": 0.3626513966,
+     "yoy": 0.0022959378000000363,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "off_market_in_two_weeks": {
+     "value": 0.2624608374,
+     "yoy": 0.005029541799999981,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zhvi": {
+     "value": 362320.8085552982,
+     "yoy": -0.03295395288282299,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zori": {
+     "value": 1655.091611452694,
+     "yoy": -0.002206805853742666,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "permits_total": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_1unit": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_5plus": {
+     "value": null,
+     "yoy_12m": null
+    }
+   },
+   "temperature": {
+    "score": 24,
+    "label": "Cool",
+    "basis": null
+   },
+   "market_type": "Balanced",
+   "flags": [
+    "rent_outpacing",
+    "payment_jump"
+   ],
+   "brief_excerpt": "Dallas inventory fell 12% year-over-year to 24,274 homes as of May 2026, with rent growth outpacing home values and monthly payments up 10% annually",
+   "stale": false
+  },
+  {
+   "slug": "new-york-ny",
+   "name": "New York, NY",
+   "cbsa": "35620",
+   "lat": 40.735425,
+   "lon": -73.80773,
+   "homes_sold_12m": 55859,
+   "latest": {
+    "median_sale_price": {
+     "value": 814250.0,
+     "yoy": 0.02421383647798736,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "homes_sold": {
+     "value": 3957.0,
+     "yoy": -0.17562500000000003,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "new_listings": {
+     "value": 8030.0,
+     "yoy": -0.05082742316784872,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "inventory": {
+     "value": 23512.0,
+     "yoy": -0.06831510540497698,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "months_of_supply": {
+     "value": 5.9,
+     "yoy": 0.6000000000000005,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "median_dom": {
+     "value": 54.0,
+     "yoy": 0.0,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "avg_sale_to_list": {
+     "value": 1.006954572,
+     "yoy": 0.005239379999999905,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "sold_above_list": {
+     "value": 0.3300480162,
+     "yoy": -0.00036865049999995625,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "price_drops": {
+     "value": 0.1980690711,
+     "yoy": 0.01147056099999999,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "off_market_in_two_weeks": {
+     "value": 0.1761829653,
+     "yoy": -0.0360719367,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zhvi": {
+     "value": 726872.5619048398,
+     "yoy": 0.040855152252881055,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "zori": {
+     "value": 3544.4358938922783,
+     "yoy": 0.04421666630628107,
+     "mom": null,
+     "delta_format": null,
+     "trend_3m": null,
+     "high_36m": null,
+     "low_36m": null,
+     "pct_rank": null,
+     "yoy_pct_rank": null
+    },
+    "permits_total": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_1unit": {
+     "value": null,
+     "yoy_12m": null
+    },
+    "permits_5plus": {
+     "value": null,
+     "yoy_12m": null
+    }
+   },
+   "temperature": {
+    "score": 43,
+    "label": "Balanced",
+    "basis": null
+   },
+   "market_type": "Balanced",
+   "flags": [
+    "payment_jump"
+   ],
+   "brief_excerpt": "New York's housing market remains balanced through May 2026",
+   "stale": false
+  }
+ ],
+ "movers": {
+  "price_gains": [
+   {
+    "slug": "pittsburgh-pa",
+    "name": "Pittsburgh, PA",
+    "value": 0.07843137254901955
+   },
+   {
+    "slug": "st-louis-mo",
+    "name": "St. Louis, MO",
+    "value": 0.07017543859649122
+   },
+   {
+    "slug": "jacksonville-fl",
+    "name": "Jacksonville, FL",
+    "value": 0.06757692701751994
+   },
+   {
+    "slug": "baltimore-md",
+    "name": "Baltimore, MD",
+    "value": 0.060975609756097615
+   },
+   {
+    "slug": "nassau-county-ny",
+    "name": "Nassau County, NY",
+    "value": 0.05977496483825595
+   }
+  ],
+  "price_declines": [
+   {
+    "slug": "cape-coral-fl",
+    "name": "Cape Coral, FL",
+    "value": -0.02172583866628619
+   },
+   {
+    "slug": "orlando-fl",
+    "name": "Orlando, FL",
+    "value": -0.013107142857142873
+   },
+   {
+    "slug": "raleigh-nc",
+    "name": "Raleigh, NC",
+    "value": -0.008955555555555605
+   },
+   {
+    "slug": "san-antonio-tx",
+    "name": "San Antonio, TX",
+    "value": -0.0062510017631031145
+   },
+   {
+    "slug": "seattle-wa",
+    "name": "Seattle, WA",
+    "value": -0.0032999999999999696
+   }
+  ],
+  "inventory_growth": [
+   {
+    "slug": "fort-lauderdale-fl",
+    "name": "Fort Lauderdale, FL",
+    "value": 0.23680738786279676
+   },
+   {
+    "slug": "cincinnati-oh",
+    "name": "Cincinnati, OH",
+    "value": 0.12249642346208867
+   },
+   {
+    "slug": "boston-ma",
+    "name": "Boston, MA",
+    "value": 0.08570023361613188
+   },
+   {
+    "slug": "seattle-wa",
+    "name": "Seattle, WA",
+    "value": 0.06992066693559229
+   },
+   {
+    "slug": "detroit-mi",
+    "name": "Detroit, MI",
+    "value": 0.06741061261671599
+   }
+  ],
+  "temperature_top": [
+   {
+    "slug": "montgomery-county-pa",
+    "name": "Montgomery County, PA",
+    "value": 90.0
+   },
+   {
+    "slug": "oakland-ca",
+    "name": "Oakland, CA",
+    "value": 89.0
+   },
+   {
+    "slug": "boston-ma",
+    "name": "Boston, MA",
+    "value": 88.0
+   },
+   {
+    "slug": "chicago-il",
+    "name": "Chicago, IL",
+    "value": 86.0
+   },
+   {
+    "slug": "st-louis-mo",
+    "name": "St. Louis, MO",
+    "value": 82.0
+   }
+  ],
+  "temperature_bottom": [
+   {
+    "slug": "miami-fl",
+    "name": "Miami, FL",
+    "value": 8.0
+   },
+   {
+    "slug": "fort-lauderdale-fl",
+    "name": "Fort Lauderdale, FL",
+    "value": 9.0
+   },
+   {
+    "slug": "san-antonio-tx",
+    "name": "San Antonio, TX",
+    "value": 10.0
+   },
+   {
+    "slug": "west-palm-beach-fl",
+    "name": "West Palm Beach, FL",
+    "value": 12.0
+   },
+   {
+    "slug": "myrtle-beach-sc",
+    "name": "Myrtle Beach, SC",
+    "value": 12.0
+   }
+  ]
+ },
+ "alerts": [
+  {
+   "flag": "payment_jump",
+   "label": "Monthly payment +10% YoY",
+   "severity": "notable",
+   "slugs": [
+    "houston-tx",
+    "chicago-il",
+    "dallas-tx",
+    "new-york-ny",
+    "washington-dc",
+    "tampa-fl",
+    "st-louis-mo",
+    "baltimore-md",
+    "indianapolis-in",
+    "kansas-city-mo",
+    "warren-mi",
+    "jacksonville-fl",
+    "columbus-oh",
+    "cincinnati-oh",
+    "virginia-beach-va",
+    "cleveland-oh",
+    "nassau-county-ny",
+    "pittsburgh-pa",
+    "sacramento-ca",
+    "anaheim-ca",
+    "oakland-ca",
+    "detroit-mi"
+   ]
+  },
+  {
+   "flag": "inventory_drop",
+   "label": "Inventory -24% YoY",
+   "severity": "notable",
+   "slugs": [
+    "jacksonville-fl",
+    "miami-fl",
+    "north-port-fl",
+    "cape-coral-fl"
+   ]
+  },
+  {
+   "flag": "sellers_market",
+   "label": "Crossed into a seller's market",
+   "severity": "notable",
+   "slugs": [
+    "boston-ma"
+   ]
+  }
+ ],
+ "sources": [
+  {
+   "name": "Redfin Data Center",
+   "url": "https://www.redfin.com/news/data-center/",
+   "attribution": "Data: Redfin, a national real estate brokerage."
+  },
+  {
+   "name": "Zillow Research",
+   "url": "https://www.zillow.com/research/data/",
+   "attribution": "Zillow Home Value Index (ZHVI) and Zillow Observed Rent Index (ZORI)"
+  },
+  {
+   "name": "FRED, Federal Reserve Bank of St. Louis",
+   "url": "https://fred.stlouisfed.org/",
+   "attribution": null
+  },
+  {
+   "name": "U.S. Census Bureau, Building Permits Survey",
+   "url": "https://www.census.gov/construction/bps/",
+   "attribution": null
+  }
+ ]
+}

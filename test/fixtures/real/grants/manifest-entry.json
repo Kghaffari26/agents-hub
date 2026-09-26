@@ -1,0 +1,47 @@
+{
+ "id": "grants",
+ "name": "Grants & Contracts Finder",
+ "route": "/grants",
+ "status": "ok",
+ "last_run_at": "2026-09-26T21:29:53Z",
+ "last_data_change_at": "2026-09-26T21:29:53Z",
+ "expected_interval_hours": 24,
+ "next_run_hint": "Daily 06:00 PT",
+ "headline": "0 new matches today; 0 close within 14 days.",
+ "key_stats": [
+  {
+   "label": "New matches today",
+   "value": 0.0,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "neutral"
+  },
+  {
+   "label": "Closing ≤ 14 days",
+   "value": 0.0,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "neutral"
+  },
+  {
+   "label": "Active matches",
+   "value": 0.0,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "up"
+  },
+  {
+   "label": "Top fit",
+   "value": null,
+   "format": "count",
+   "delta": null,
+   "delta_format": null,
+   "good_direction": "up"
+  }
+ ],
+ "run_cost_usd": 0.0,
+ "items_count": 0
+}

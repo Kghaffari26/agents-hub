@@ -1,0 +1,47 @@
+{
+ "id": "macro",
+ "name": "Macro & Fed",
+ "route": "/macro",
+ "status": "ok",
+ "last_run_at": "2026-09-26T21:28:45Z",
+ "last_data_change_at": null,
+ "expected_interval_hours": 24,
+ "next_run_hint": "Weekdays ~7:00 PT",
+ "headline": "The FOMC raised rates to 3.75–4.00%.",
+ "key_stats": [
+  {
+   "label": "CPI YoY",
+   "value": 3.4,
+   "format": "percent",
+   "delta": 0.1,
+   "delta_format": "pp_signed",
+   "good_direction": "down"
+  },
+  {
+   "label": "Core PCE YoY",
+   "value": 3.3,
+   "format": "percent",
+   "delta": 0.0,
+   "delta_format": "pp_signed",
+   "good_direction": "down"
+  },
+  {
+   "label": "Unemployment",
+   "value": 4.1,
+   "format": "percent",
+   "delta": 0.0,
+   "delta_format": "pp_signed",
+   "good_direction": "down"
+  },
+  {
+   "label": "10Y yield",
+   "value": 5.18,
+   "format": "percent",
+   "delta": 0.07,
+   "delta_format": "pp_signed",
+   "good_direction": "neutral"
+  }
+ ],
+ "run_cost_usd": 0.0,
+ "items_count": 25
+}

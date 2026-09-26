@@ -1,6 +1,6 @@
 # Status — agents-hub website
 
-_Last updated 2026-09-26._
+_Last updated 2026-09-26 (session 2: live-data readiness)._
 
 ## Done
 
@@ -20,12 +20,12 @@ Also: README (pitch, screenshots, architecture, links to the four agent repos an
 
 ## Tests
 
-| Suite                              | Result                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Vitest (unit, component, contract) | **172 passed**, 14 files — formatters, mortgage math (incl. the $2,528.27 vector and the agent's own payments), colors/deltas, stale detection, URL state, CSV, metrics, loaders (corrupt file → error naming file + field; schema major mismatch), every fixture vs its zod schema + 2 broken fixtures, MetroPicker, AffordabilityCalc, LastUpdated, StatCard, StatementDiff, IndicatorCard, GrantsTable/filters/CSV, TopMatches, Repos components, page smoke tests                                            |
-| Playwright e2e + axe               | **33 passed** (stable over 4 consecutive runs; also passes with `BASE_PATH=/agents-hub`) — every route renders with no console errors, overview cards + stale flip via clock, metro deep links + 404, theme toggle persistence, mobile nav, no horizontal scroll at 360px on any route, the full compare → URL → new-tab round trip incl. map click, calculator, macro diff/revisions/yield curve, grants filter → sort → CSV equals visible rows, repos sections; axe (serious/critical) on 7 routes × 2 themes |
-| `npm run lint`                     | clean (eslint 0 problems, prettier clean) · `tsc --noEmit` clean                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `npm run build`                    | succeeds; 57 HTML pages (6 routes + 50 metro pages + 404)                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Suite                              | Result                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vitest (unit, component, contract) | **207 passed**, 16 files — real agent output for all four agents (`test/fixtures/real/`), RunMeta 1.0/1.1 + warnings + extra keys accepted and 2.0 rejected, tolerated agent deviations, fetch-data fallback reasons (validation path, missing file, offline) and summary table; formatters, mortgage math (incl. the $2,528.27 vector and the agent's own payments), colors/deltas, stale detection, URL state, CSV, metrics, loaders (corrupt file → error naming file + field; schema major mismatch), every fixture vs its zod schema + 2 broken fixtures, MetroPicker, AffordabilityCalc, LastUpdated, StatCard, StatementDiff, IndicatorCard, GrantsTable/filters/CSV, TopMatches, Repos components, page smoke tests |
+| Playwright e2e + axe               | **33 passed** on fixtures and **33 passed** on a build from real agent output (the unscored grants run also passes routes + axe); earlier: stable over 4 runs, passes with `BASE_PATH=/agents-hub` — every route renders with no console errors, overview cards + stale flip via clock, metro deep links + 404, theme toggle persistence, mobile nav, no horizontal scroll at 360px on any route, the full compare → URL → new-tab round trip incl. map click, calculator, macro diff/revisions/yield curve, grants filter → sort → CSV equals visible rows, repos sections; axe (serious/critical) on 7 routes × 2 themes                                                                                                  |
+| `npm run lint`                     | clean (eslint 0 problems, prettier clean) · `tsc --noEmit` clean                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `npm run build`                    | succeeds; 57 HTML pages (6 routes + 50 metro pages + 404)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 First-load JS (gzipped, from `next build`): `/` 111 KB (budget 120), `/real-estate` 141 KB (budget 250, map and chart in separate chunks), `/macro` 118 KB, `/grants` 146 KB, `/repos` 109 KB.
 
@@ -43,15 +43,45 @@ First-load JS (gzipped, from `next build`): `/` 111 KB (budget 120), `/real-esta
 
 \* range over 4 runs. Budgets (§11: `/` ≥ 95, `/real-estate` ≥ 90, CLS < 0.05) are met. Best practices was 96 on every route until a favicon was added (the only failing audit was the `/favicon.ico` 404); re-measured 100 on `/` and `/real-estate`, the other rows are from the earlier sweep.
 
+## This session: live data readiness (agents-core v0.1.0)
+
+All four agents now publish agents-core `RunMeta`, so the site is set up to go live the moment each `data` branch appears.
+
+- **`meta` aligned with agents-core `RunMeta`** (`src/lib/schemas/common.ts`): the v0.1.0 fields exactly, plus forward compatibility with v0.2.0 — any `1.x` schema_version (major still enforced), optional `warnings: string[]`, and unknown agent-specific meta keys passed through. §6 bodies unchanged.
+- **Validated against real agent output.** Real runs of all four agents (2026-09-26) pass the site's validators and render with no console errors; full e2e + axe (33 tests) pass on a build made from them. Trimmed copies are contract fixtures in `test/fixtures/real/<agent>/` (provenance in its README). How each was produced, spending $0:
+  - `real_estate`: `agents-run real_estate` against live Redfin/Zillow/FRED; all 51 briefs reused from the agent's committed LLM cache.
+  - `macro`: agents-core runner against live FRED/federalreserve.gov; no-change day, brief and FOMC read reused from committed state.
+  - `grants`: agents-core runner against live SAM.gov/Grants.gov with no LLM (nothing scored), plus a second run over the same cached data scored by the agent's own test `FakeClient` (`grants__fake-llm`) to cover `top_matches`.
+  - `repo_maint`: the agent's committed `public-data/` (a real report-mode run).
+- **Site-side fixes from that check:** two tolerated agent deviations (below), and the macro e2e no longer assumes a revision badge exists.
+- **`fetch-data` says why** an agent fell back: one log line per agent with the kind (`missing_repo`, `missing_branch`, `missing_file`, `http`, `network`, `invalid_json`, `validation`, `offline`), the file, and for validation up to 10 zod paths; then a live/sample summary table in the build log and the Actions job summary. `_fetch-report.json` holds the same, structured. New: `--local <agent>=<dir>` to build from a local run, and `scripts/validate-data.mjs <agent> <dir>` to list every contract issue in one.
+
+Current `npm run fetch-data` output (no agent has pushed its `data` branch yet):
+
+```
+[fetch-data] summary: 0/4 agents live, 4 using sample data
+  agent        data    files  schema / reason  detail
+  real_estate  SAMPLE  —      missing_branch   Kghaffari26/real-estate-agent has no "data" branch yet (agent hasn't published)
+  macro        SAMPLE  —      missing_branch   Kghaffari26/fed-agent has no "data" branch yet (agent hasn't published)
+  grants       SAMPLE  —      missing_branch   Kghaffari26/sam-agent has no "data" branch yet (agent hasn't published)
+  repo_maint   SAMPLE  —      missing_branch   Kghaffari26/repo-maintain-agent has no "data" branch yet (agent hasn't published)
+```
+
+With the real outputs as `--local` sources the same table reads `4/4 agents live`.
+
+## Agent-side fixes needed
+
+These are accepted by the site for now (each has a `TODO(<agent>)` in `src/lib/schemas/` and a contract test), so they don't block live data, but the agents should fix them:
+
+1. **repo-maintain-agent** — `repos[].changelog.narrative_source` is `"deterministic"` (`agents/repo_maint/schema.py`: `Literal["llm", "deterministic"]`). agents-core and SPEC_REPO_MAINT §6 allow only `"llm" | "template"`. The site reads it as `"template"`. Fix: publish `"template"`.
+2. **real-estate-agent** — for `change_kind: diff` metrics, `delta_format` is `"<unit>_signed"` (`metrics.py` → `days_signed`, `months_signed`, or `diff_signed` with no unit), and `schema.py` types it as `str`. These aren't agents-core `StatFormat` values. The site maps `days_signed → days`, `months_signed → decimal1`, other `*_signed → null`. Fix: emit `days` / `decimal1` (or add the formats to agents-core's `StatFormat` first, then the site).
+3. **sam-agent** — with no Anthropic key, `agents-run grants` crashes: `scoring.score_opportunities` catches `LLMError` but the missing-key `RuntimeError` from the client escapes, and the runner publishes a `failed` manifest entry. Not a contract issue, but it means a missing secret takes the whole section down instead of degrading to unscored. (fed-agent has the same pattern at the agents-core level: only `LLMError` falls back to templates.)
+4. **real-estate-agent** — `state.py` writes `data/real_estate/state.json` at a fixed path instead of under `AGENTS_CORE_DATA_DIR`. Harmless in CI; noted because local runs with a custom data dir still modify the repo.
+5. Observed, not bugs: real_estate `payment_to_income` is null without `CENSUS_API_KEY`, and permits are skipped (Census file layout unverified); the site shows "—" for both. `manifest-entry.json`'s `last_data_change_at` is null on a first publish (the site handles it).
+
 ## Known gaps
 
-- **No agent has a `data` branch yet**, so every section currently shows committed sample data with a "Sample data" badge (`public/data/_fetch-report.json` records why for each agent). The site switches to live data automatically on the next deploy after an agent publishes.
-- **Some agents' current output differs from their spec's §6**, and the site's contract is §6-exact (your rule), so those agents will keep showing sample data after they publish until they match:
-  - `repo-maintain-agent`: its committed sample `public-data/repo_maint/latest.json` validates except `changelog.narrative_source: "deterministic"` (§6 and agents-core allow `"llm" | "template"`).
-  - `fed-agent`: `schemas/macro.schema.json` has a stand-in `meta` (`run_id`, `generated_at`, `status`, `data_changed`, `warnings`) — no `schema_version`, `started_at`, `finished_at`, `cost_usd`, `model_usage`, `sources`.
-  - `real-estate-agent`: its schema's `meta` lacks `schema_version`, `run_id`, `model_usage` and `sources` (has `stale`, `batch_fallback`, `warnings`).
-  - `sam-agent`: `agents/grants/schema.py` uses a stand-in `Meta` (`generated_at`, `status: ok|error`) per its own note, pending agents-core.
-    Once the agents adopt agents-core's `RunMeta`, these go away. If you'd rather accept small deviations, relax the enum/fields in `src/lib/schemas/*.ts` (and add a fixture for the variant).
+- **No agent has a `data` branch yet**, so every section still shows committed sample data with a "Sample data" badge; the build log's fetch-data summary shows why per agent. The site switches to live data on the next deploy after an agent publishes (verified locally with real runs).
 - OSM tiles were blocked in the build sandbox, so map screenshots show markers without tiles; tiles load normally on the public site. For heavier traffic set `NEXT_PUBLIC_MAP_TILES` to a free-tier provider (OSM fair-use policy).
 - Leaflet markers themselves aren't keyboard-focusable; the "View as table" fallback (tested) provides the same data and a Compare button per metro.
 - Lighthouse CI in the workflow warns only (spec v1); `@next/bundle-analyzer` is not wired (sizes come from `next build`).
@@ -63,6 +93,6 @@ First-load JS (gzipped, from `next build`): `/` 111 KB (budget 120), `/real-esta
 1. **Enable GitHub Pages:** repo **Settings → Pages → Build and deployment → Source: GitHub Actions**. Then run the **Deploy site** workflow once (Actions → Deploy site → Run workflow), or push to `main`. The site will be at `https://kghaffari26.github.io/agents-hub/`.
 2. **Environment protection (if the first deploy is rejected):** Settings → Environments → `github-pages` → allow the `main` branch.
 3. **Let agents trigger deploys:** in each agent repo's workflow that calls agents-core's `run-agent.yml`, set `site_repo: Kghaffari26/agents-hub`, and add a `SITE_DISPATCH_TOKEN` secret there (a fine-grained PAT with **Contents: Read and write** on `Kghaffari26/agents-hub`, which is what `repository_dispatch` requires). Without it the 6-hourly schedule still picks up new data.
-4. **Publish data:** once each agent's workflow has run and force-pushed its `data` branch, the next deploy uses it. Check `public/data/_fetch-report.json` in the workflow logs ("fetch-data" step) to see which agents are live vs sample and why.
-5. **Contract alignment (optional, see Known gaps):** update the agents to emit their §6 shapes (or tell me to relax specific fields here).
+4. **Publish data:** once each agent's workflow has run and force-pushed its `data` branch, the next deploy uses it. The "Fetch agent data" step log (and the run's job summary) has a live/sample table with the reason for any fallback.
+5. **Agent-side fixes (optional, see above):** none block live data; fix them in the agents when convenient, then drop the matching `TODO` tolerance here.
 6. **Custom domain (optional):** set a `CUSTOM_DOMAIN` repo variable, add `public/CNAME`, and change `BASE_PATH`/`SITE_URL` in `deploy.yml` to `''` and your domain.

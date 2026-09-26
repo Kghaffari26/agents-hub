@@ -42,7 +42,9 @@ agent repos (Python, GitHub Actions cron)              agents-hub (this repo)
 ```
 
 - **Data contract.** Each agent's `data` branch holds `latest.json`, agent-specific files (`metros/<slug>.json`, `all.json`), `history/`, `manifest-entry.json`, `costs-summary.json` and `schema.json` ([agents-core README](https://github.com/Kghaffari26/agents-core#the-data-branch-contract)). The shapes are §6 of each agent spec in [`docs/specs/`](docs/specs/). The site validates every file with zod (`src/lib/schemas/`); build-time loaders throw an error naming the file and field.
-- **Never blocked by an agent.** If a data branch is missing or a file fails its contract, `fetch-data` uses that agent's committed fixtures (`test/fixtures/<agent>/`) and the UI shows a **Sample data** badge on that section.
+- **`meta` = agents-core `RunMeta`.** Every `latest.json` starts with agents-core's `RunMeta` (v0.1.0, `schema_version` 1.0.0). The site accepts any `1.x` schema_version, optional `warnings`, and extra agent-specific meta keys (agents-core v0.2.0); only a new major is rejected. The §6 bodies stay exact.
+- **Validated against real output.** `test/fixtures/real/<agent>/` holds trimmed copies of real runs of all four agents; the contract tests keep the site's zod schemas in step with what agents actually publish.
+- **Never blocked by an agent.** If a data branch is missing or a file fails its contract, `fetch-data` uses that agent's committed fixtures (`test/fixtures/<agent>/`) and the UI shows a **Sample data** badge on that section. The build log says exactly why, per agent (missing repo/branch/file, HTTP or network error, or the failing zod path), ends with a live/sample summary table (also in the Actions job summary), and `public/data/_fetch-report.json` records the same.
 - **Build-time vs lazy data.** Headline numbers and briefs render into HTML at build time; per-metro series, the full grants table and 10-year macro series load client-side on demand through `dataUrl()` (basePath-aware).
 - **Performance.** Recharts and Leaflet are code-split and load after first paint; mobile Lighthouse (local, gzip, simulated 4G): 99 on `/`, 92–98 on `/real-estate`, 95+ elsewhere.
 
@@ -50,7 +52,9 @@ agent repos (Python, GitHub Actions cron)              agents-hub (this repo)
 
 ```
 config/sources.json        where each agent publishes (order = overview cards)
-scripts/fetch-data.mjs     download data branches → public/data (fixture fallback)
+scripts/fetch-data.mjs     download data branches → public/data (fixture fallback, reasons + summary table)
+scripts/validate-data.mjs  check a local data-branch folder against the site's contracts (all issues)
+scripts/trim_real_fixture.py  copy a real agent run into test/fixtures/real/ (trimmed)
 scripts/gen-types.mjs      schema.json → src/types/generated + src/lib/validators/generated
 scripts/gen_fixtures.py    deterministic, realistic fixtures for all four agents
 scripts/gen-og.mjs         OG images (satori + resvg) · gen-sitemap.mjs · serve-out.mjs
@@ -72,6 +76,8 @@ npm run build           # static export to out/
 npm run e2e             # Playwright + axe against out/
 npm run lint            # eslint + prettier
 npm run gen:fixtures    # regenerate test/fixtures (python3)
+node scripts/validate-data.mjs grants ../sam-agent/public-data     # does a real run match the site's contract?
+node scripts/fetch-data.mjs --local grants=../sam-agent/public-data # build with a local run (others as usual)
 BASE_PATH=/agents-hub npm run build && BASE_PATH=/agents-hub npm run e2e   # reproduce GitHub Pages paths
 ```
 

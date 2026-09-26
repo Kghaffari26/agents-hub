@@ -3,6 +3,15 @@ import { keyStat, narrativeSource, runMeta, timestamp } from './common';
 
 /** SPEC_REPO_MAINT §6. */
 
+/**
+ * TODO(repo-maintain-agent): it publishes `"deterministic"` for the non-LLM changelog, but §6 and
+ * agents-core allow only `"llm" | "template"`. Accepted (and read as `"template"`) until the agent
+ * is fixed — see STATUS.md "Agent-side fixes needed".
+ */
+const changelogNarrativeSource = z
+  .union([narrativeSource, z.literal('deterministic')])
+  .transform((v): z.infer<typeof narrativeSource> => (v === 'deterministic' ? 'template' : v));
+
 const ciState = z.enum(['success', 'failure', 'pending', 'none']);
 
 export const triageItem = z.object({
@@ -81,7 +90,7 @@ export const repo = z.object({
       item_count: z.number().int(),
       suggested_version: z.string().nullable(),
       markdown: z.string(),
-      narrative_source: narrativeSource,
+      narrative_source: changelogNarrativeSource,
       model: z.string().nullable().optional(),
       generated_at: timestamp,
       cached: z.boolean(),

@@ -4,6 +4,24 @@ import { citation, goodDirection, isoDate, keyStat, narrativeSource, runMeta, st
 /** SPEC_REAL_ESTATE §6. */
 
 const num = z.number().nullable();
+
+/**
+ * TODO(real-estate-agent): for `change_kind: diff` metrics it publishes `delta_format:
+ * "<unit>_signed"` (`days_signed`, `months_signed`, `diff_signed`), which is outside the shared
+ * agents-core `StatFormat` vocabulary. Read the known ones as their StatFormat equivalent and any
+ * other `*_signed` as null (the site then formats from the metric registry). See STATUS.md
+ * "Agent-side fixes needed".
+ */
+const DIFF_FORMAT_ALIASES: Record<string, z.infer<typeof statFormat>> = {
+  days_signed: 'days',
+  months_signed: 'decimal1',
+};
+const metricDeltaFormat = z
+  .union([statFormat, z.string().regex(/^[a-z]+_signed$/, 'expected a StatFormat')])
+  .transform((v): z.infer<typeof statFormat> | null => {
+    const known = statFormat.safeParse(v);
+    return known.success ? known.data : (DIFF_FORMAT_ALIASES[v] ?? null);
+  });
 const trend = z.enum(['up', 'down', 'flat']).nullable().optional();
 
 export const metricValue = z.object({
@@ -11,7 +29,7 @@ export const metricValue = z.object({
   yoy: num.optional(),
   yoy_12m: num.optional(),
   mom: num.optional(),
-  delta_format: statFormat.nullable().optional(),
+  delta_format: metricDeltaFormat.nullable().optional(),
   trend_3m: trend,
   high_36m: z.boolean().nullable().optional(),
   low_36m: z.boolean().nullable().optional(),

@@ -4,7 +4,8 @@ Static Next.js 15 site (App Router, `output: 'export'`) at the repo root. It hos
 
 ## Commands
 
-- `npm run fetch-data` — assemble `public/data/` from data branches (per-agent fixture fallback, `sample: true`). `--offline` = fixtures only.
+- `npm run fetch-data` — assemble `public/data/` from data branches (per-agent fixture fallback, `sample: true`; logs the reason per agent and a summary table). `--offline` = fixtures only; `--local <agent>=<dir>` reads an agent's run from disk.
+- `node scripts/validate-data.mjs <agent> <dir>` — every contract issue in a real agent output folder. Real runs live trimmed in `test/fixtures/real/` (`scripts/trim_real_fixture.py`).
 - `npm run dev` / `npm run build` — both assemble fixtures first if `public/data` is missing.
 - `npm test -- --run` (Vitest) · `npm run e2e` (Playwright + axe on `out/`, served by `scripts/serve-out.mjs`) · `npm run lint` (eslint + prettier --check) · `npx tsc --noEmit`.
 - `npm run gen:fixtures` regenerates `test/fixtures/` deterministically; then `node scripts/fetch-data.mjs --offline`.
@@ -12,7 +13,7 @@ Static Next.js 15 site (App Router, `output: 'export'`) at the repo root. It hos
 
 ## Rules
 
-- **Contracts:** `src/lib/schemas/*.ts` (hand-written zod matching each spec's §6) is what pages use. Never hand-edit `src/types/generated/` or `src/lib/validators/generated/` (written by `gen:types`). If an agent's contract changes, update the zod schema, the fixture generator, and the contract tests together.
+- **Contracts:** `src/lib/schemas/*.ts` (hand-written zod matching each spec's §6) is what pages use. `meta` is agents-core `RunMeta` with passthrough (1.x, optional `warnings`, extra keys); bodies stay exact. Tolerated agent deviations carry a `TODO(<agent>)` and are listed in STATUS.md. Never hand-edit `src/types/generated/` or `src/lib/validators/generated/` (written by `gen:types`). If an agent's contract changes, update the zod schema, the fixture generator, and the contract tests together.
 - **Data URLs** only via `dataUrl()` / `assetUrl()` (`src/lib/data/url.ts`) — the site runs under `/agents-hub` on Pages.
 - **Build-time data** only through `src/lib/data/server.ts` loaders (validate + clear errors). Client data through `useJson` / `fetchJson` (`src/lib/data/client.ts`).
 - **Numbers:** format with `src/lib/format.ts`; missing → "—", never 0. Rate changes are pp, never %. Real-estate share metrics are 0–1 ratios (`{ isRatio: true }`).
