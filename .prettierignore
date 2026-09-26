@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+public/data
+public/og
+test/fixtures
+docs/specs
+schemas
+package-lock.json
+src/types/generated
+src/lib/validators/generated
+.lighthouseci
+test-results
+playwright-report
+screenshots

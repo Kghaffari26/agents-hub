@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+coverage/
+next-env.d.ts
+*.tsbuildinfo
+.lighthouseci/
+test-results/
+playwright-report/
+# Assembled at build time by scripts/fetch-data.mjs (never hand-edit):
+public/data/
+public/og/
+public/sitemap.xml
+public/robots.txt
+.DS_Store

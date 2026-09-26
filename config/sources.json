@@ -1,0 +1,43 @@
+{
+  "$comment": "Where each agent publishes. scripts/fetch-data.mjs downloads https://raw.githubusercontent.com/<repo>/<branch>/<path> into public/data/<id>/. Order = overview card order. Adding a fifth agent: add an entry here, a fixture folder in test/fixtures/<id>/, a zod schema in src/lib/schemas/, and a route.",
+  "raw_base": "https://raw.githubusercontent.com",
+  "agents": [
+    {
+      "id": "real_estate",
+      "name": "Real Estate Market Agent",
+      "repo": "Kghaffari26/real-estate-agent",
+      "branch": "data",
+      "route": "/real-estate",
+      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
+      "optional_files": ["schema.json"],
+      "dynamic_files": { "from": "latest.json", "jsonpath": "metros[*].slug", "pattern": "metros/{}.json" }
+    },
+    {
+      "id": "macro",
+      "name": "Macro & Fed Agent",
+      "repo": "Kghaffari26/fed-agent",
+      "branch": "data",
+      "route": "/macro",
+      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
+      "optional_files": ["schema.json"]
+    },
+    {
+      "id": "grants",
+      "name": "Grants & Contracts Agent",
+      "repo": "Kghaffari26/sam-agent",
+      "branch": "data",
+      "route": "/grants",
+      "files": ["latest.json", "all.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
+      "optional_files": ["schema.json"]
+    },
+    {
+      "id": "repo_maint",
+      "name": "Repo Maintenance Agent",
+      "repo": "Kghaffari26/repo-maintain-agent",
+      "branch": "data",
+      "route": "/repos",
+      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
+      "optional_files": ["schema.json"]
+    }
+  ]
+}

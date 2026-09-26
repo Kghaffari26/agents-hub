@@ -1,0 +1,100 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [agent-data-updated] # sent by each agent's run-agent workflow after it publishes
+  schedule:
+    - cron: '0 */6 * * *' # safety net: pick up data even if a dispatch was missed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  # GitHub Pages serves the site under /<repo>; next.config.mjs, the sitemap and the
+  # e2e server all read this.
+  BASE_PATH: /agents-hub
+  SITE_URL: https://kghaffari26.github.io/agents-hub
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch agent data (falls back to fixtures per agent)
+        run: npm run fetch-data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # only for listing history/ via the API
+
+      - name: Generate types from published schemas
+        run: npm run gen:types
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit, component and contract tests
+        run: npm test -- --run
+
+      - name: Build (static export)
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E + axe
+        run: npm run e2e
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: test-results/
+          retention-days: 7
+
+      - name: Lighthouse CI (warn only)
+        uses: treosh/lighthouse-ci-action@v12
+        continue-on-error: true
+        with:
+          configPath: ./lighthouserc.json
+          urls: |
+            http://localhost:4173/agents-hub/
+            http://localhost:4173/agents-hub/real-estate/
+            http://localhost:4173/agents-hub/macro/
+            http://localhost:4173/agents-hub/grants/
+          uploadArtifacts: true
+          temporaryPublicStorage: false
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
