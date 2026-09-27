@@ -24,4 +24,14 @@ export function trackErrors(page: Page) {
   return errors;
 }
 
-export const ROUTES = ['', 'real-estate/', 'real-estate/austin-tx/', 'macro/', 'grants/', 'repos/', 'about/'];
+export const ROUTES = [
+  '',
+  'real-estate/',
+  'real-estate/austin-tx/',
+  'macro/',
+  'grants/',
+  'repos/',
+  'case-studies/',
+  'mcp/',
+  'about/',
+];

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Info } from 'lucide-react';
-import { getAgent, getGrantsLatest } from '@/lib/data/server';
+import { getAgent, getEvals, getGrantsLatest, getTraceInfo } from '@/lib/data/server';
 import { canonical } from '@/lib/data/url';
 import { ogImages } from '@/lib/data/url';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -10,6 +10,8 @@ import { TopMatches, topByFit } from '@/components/grants/TopMatches';
 import { GrantsTable } from '@/components/grants/GrantsTable';
 import { DeadlineTimeline } from '@/components/grants/DeadlineTimeline';
 import { GrantsMethodology, ProfileSection } from '@/components/grants/GrantsMethodology';
+import { RunTrace } from '@/components/trace/RunTrace';
+import { EvalsSection } from '@/components/evals/EvalsSection';
 
 export function generateMetadata(): Metadata {
   const data = getGrantsLatest();
@@ -74,6 +76,10 @@ export default function GrantsPage() {
       <GrantsTable topMatches={data.top_matches} />
 
       <ProfileSection profile={data.profile} />
+
+      <RunTrace agent={agent} info={getTraceInfo('grants')} />
+
+      <EvalsSection data={getEvals('grants')} agentName="grants agent" />
 
       <GrantsMethodology data={data} />
     </div>

@@ -5,11 +5,12 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { tsImport } from 'tsx/esm/api';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 export async function loadSchemas() {
+  // Imported lazily so the pure helpers below can be used from tests without esbuild.
+  const { tsImport } = await import('tsx/esm/api');
   return tsImport(pathToFileURL(path.join(ROOT, 'src/lib/schemas/index.ts')).href, import.meta.url);
 }
 
@@ -52,6 +53,45 @@ export function validateJson(schemas, agentId, rel, data) {
   return [];
 }
 
+/**
+ * The agentic §6.x fields are read leniently (a malformed one is dropped, not fatal). This checks
+ * them strictly so the drop is visible: returns one warning string per malformed field.
+ */
+export function agenticWarnings(schemas, agentId, rel, data) {
+  const byFile = schemas.AGENTIC_FIELDS?.[agentId] ?? {};
+  let fields = byFile[rel];
+  if (!fields) {
+    for (const [pattern, f] of Object.entries(byFile)) {
+      if (
+        pattern.includes('*') &&
+        new RegExp('^' + pattern.replace('.', '\\.').replace('*', '[^/]+') + '$').test(rel)
+      )
+        fields = f;
+    }
+  }
+  if (!fields || data == null || typeof data !== 'object') return [];
+  const out = [];
+  const check = (value, schema, where) => {
+    if (value === undefined) return;
+    const res = schema.safeParse(value);
+    if (!res.success) {
+      const i = res.error.issues[0];
+      out.push(
+        `${rel}: ${where} doesn't match the documented shape at ${[where, ...i.path].join('.')}: ${i.message} (not shown)`,
+      );
+    }
+  };
+  for (const [key, schema] of Object.entries(fields)) {
+    const m = key.match(/^(\w+)\[\]\.(\w+)$/);
+    if (m) {
+      (Array.isArray(data[m[1]]) ? data[m[1]] : []).forEach((item, i) =>
+        check(item?.[m[2]], schema, `${m[1]}.${i}.${m[2]}`),
+      );
+    } else check(data[key], schema, key);
+  }
+  return out;
+}
+
 async function walk(dir, base = dir) {
   const out = [];
   for (const e of await readdir(dir, { withFileTypes: true })) {
@@ -73,7 +113,18 @@ export async function validateTree(schemas, agentId, dir) {
     } catch (e) {
       issues = [{ path: '', message: `invalid JSON: ${e.message}` }];
     }
-    results.push({ rel, schema: !!schema, ok: issues.length === 0, issues });
+    let warnings = [];
+    try {
+      warnings = agenticWarnings(
+        schemas,
+        agentId,
+        rel,
+        JSON.parse(await readFile(path.join(dir, rel), 'utf8')),
+      );
+    } catch {
+      /* invalid JSON already reported */
+    }
+    results.push({ rel, schema: !!schema, ok: issues.length === 0, issues, warnings });
   }
   return results;
 }

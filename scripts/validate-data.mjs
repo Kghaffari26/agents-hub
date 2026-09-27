@@ -21,6 +21,7 @@ let bad = 0;
 // Group identical issues across files (e.g. the same field failing in all 50 metro files).
 const grouped = new Map();
 for (const r of results) {
+  for (const w of r.warnings ?? []) console.log(`warn  ${w}`);
   if (r.ok) {
     console.log(`ok    ${r.rel}${r.schema ? '' : ' (no schema mapped, not checked)'}`);
     continue;

@@ -5,6 +5,10 @@
  *   node scripts/fetch-data.mjs            # live fetch, per-agent fallback to fixtures
  *   node scripts/fetch-data.mjs --offline  # fixtures only (no network)
  *
+ * Also, from each agent repo's default branch (not its data branch): evals/history.jsonl →
+ * public/data/evals/<id>.json (normalized; agents-mcp too) and docs/case-studies.md →
+ * public/data/case-studies/<id>.md, each falling back to test/fixtures/{evals,case-studies}/.
+ *
  * For every agent in config/sources.json:
  *   1. Download its files from https://raw.githubusercontent.com/<repo>/<branch>/<path>
  *      (latest.json, manifest-entry.json, costs-summary.json, agent-specific files,
@@ -29,7 +33,7 @@ import { fileURLToPath } from 'node:url';
 import { appendFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { loadSchemas, validateJson } from './lib/contracts.mjs';
+import { agenticWarnings, loadSchemas, validateJson } from './lib/contracts.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = process.env.FETCH_OUT_DIR
@@ -53,6 +57,24 @@ const LOCAL = Object.fromEntries(
       return [id, path.resolve(dir.join('='))];
     }),
 );
+
+/**
+ * `--local-repo <id>=<dir>` (repeatable): read an agent repo's default-branch files (evals history,
+ * case studies) from a local checkout instead of raw.githubusercontent.com.
+ */
+const LOCAL_REPO = Object.fromEntries(
+  process.argv
+    .flatMap((a, i, all) =>
+      a === '--local-repo' ? [all[i + 1]] : a.startsWith('--local-repo=') ? [a.slice(13)] : [],
+    )
+    .filter(Boolean)
+    .map((x) => {
+      const [id, ...dir] = x.split('=');
+      return [id, path.resolve(dir.join('='))];
+    }),
+);
+const MAX_MD_BYTES = 300_000;
+const MAX_EVAL_ENTRIES = 400;
 
 const config = JSON.parse(await readFile(path.join(ROOT, 'config', 'sources.json'), 'utf8'));
 const schemas = await loadSchemas();
@@ -230,11 +252,16 @@ async function fetchAgent(agent, dest) {
       const text = localDir ? await readLocal(localDir, rel) : await fetchText(`${base}/${rel}`, rel);
       const data = parseAndValidate(agent.id, rel, text);
       files.set(rel, text);
+      if (!rel.startsWith('history/')) warnings.push(...agenticWarnings(schemas, agent.id, rel, data));
       return data;
     } catch (e) {
       if (!optional) throw e;
-      // Optional files (schema.json, history snapshots) never cause a fallback, but say why they were skipped.
-      if (!(e.kind === 'missing_file' && rel === 'schema.json')) warnings.push(`skipped ${e.message}`);
+      // Optional files (schema.json, trace.json, history snapshots) never cause a fallback, but say why they were skipped.
+      if (e.kind === 'missing_file' && rel === 'trace.json')
+        warnings.push(
+          'no trace.json yet (published from agents-core v0.3.0 on); the Run trace panel says so',
+        );
+      else if (!(e.kind === 'missing_file' && rel === 'schema.json')) warnings.push(`skipped ${e.message}`);
       return null;
     }
   };
@@ -386,11 +413,17 @@ async function main() {
   schemas.costSummary.parse(summary);
   await mkdir(path.join(OUT, 'costs'), { recursive: true });
   await writeFile(path.join(OUT, 'costs', 'summary.json'), JSON.stringify(summary));
+  const extras = await fetchRepoFiles(manifest.generated_at);
   await writeFile(
     path.join(OUT, '_fetch-report.json'),
-    JSON.stringify({ generated_at: manifest.generated_at, offline: OFFLINE, agents: report }, null, 2),
+    JSON.stringify(
+      { generated_at: manifest.generated_at, offline: OFFLINE, agents: report, extras },
+      null,
+      2,
+    ),
   );
   await printSummary(report);
+  await printExtras(extras);
   const list = await readdir(OUT);
   log(`public/data: ${list.join(', ')}`);
 }
@@ -427,6 +460,155 @@ async function printSummary(report) {
       '',
       `| ${head.join(' | ')} |`,
       `| ${head.map(() => '---').join(' | ')} |`,
+      ...rows.map((r) => `| ${r.map(esc).join(' | ')} |`),
+      '',
+    ].join('\n');
+    await appendFile(process.env.GITHUB_STEP_SUMMARY, md).catch(() => {});
+  }
+}
+
+// ---- default-branch files: evals history and case studies ---------------------------------
+
+/** Read `rel` from a repo's default branch (or a `--local-repo` checkout). Throws a Fallback. */
+async function readRepoFile(id, repo, rel) {
+  const local = LOCAL_REPO[id];
+  if (local) return readLocal(local, rel);
+  if (OFFLINE) throw new Fallback('offline', 'offline mode (--offline / FETCH_OFFLINE=1)');
+  return fetchText(`${config.raw_base}/${repo}/${config.repo_files.branch}/${rel}`, rel);
+}
+
+/** Parse JSONL eval history: valid lines are normalized, invalid ones counted and skipped. */
+function parseEvalHistory(text) {
+  const entries = [];
+  let skipped = 0;
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trim()) continue;
+    let raw;
+    try {
+      raw = JSON.parse(line);
+    } catch {
+      skipped++;
+      continue;
+    }
+    const res = schemas.evalHistoryLine.safeParse(raw);
+    if (res.success) entries.push(res.data);
+    else skipped++;
+  }
+  entries.sort((a, b) => a.ts.localeCompare(b.ts));
+  return { entries: entries.slice(-MAX_EVAL_ENTRIES), skipped };
+}
+
+async function fetchRepoFiles(generatedAt) {
+  const rf = config.repo_files;
+  const out = { evals: [], case_studies: [] };
+  const evalSources = [
+    ...config.agents.map((a) => ({ id: a.id, name: a.name, repo: a.repo })),
+    ...(config.eval_sources ?? []),
+  ];
+  await mkdir(path.join(OUT, 'evals'), { recursive: true });
+  for (const src of evalSources) {
+    const source_url = `https://github.com/${src.repo}/blob/${rf.branch}/${rf.evals}`;
+    let parsed = null;
+    let reason = null;
+    try {
+      parsed = parseEvalHistory(await readRepoFile(src.id, src.repo, rf.evals));
+      if (!parsed.entries.length) {
+        reason = `${rf.evals}: no valid entries${parsed.skipped ? ` (${parsed.skipped} invalid lines)` : ''}`;
+        parsed = null;
+      }
+    } catch (e) {
+      reason = e instanceof Fallback ? `${e.kind}: ${e.message}` : String(e?.message ?? e);
+    }
+    let sample = false;
+    if (!parsed) {
+      sample = true;
+      parsed = parseEvalHistory(await readFile(path.join(FIXTURES, 'evals', `${src.id}.jsonl`), 'utf8'));
+    }
+    // Harnesses that don't write `suite` (agents-mcp's) get a configured name instead of "default".
+    if (src.default_suite)
+      for (const e of parsed.entries) if (e.suite === 'default') e.suite = src.default_suite;
+    const file = {
+      id: src.id,
+      name: src.name,
+      repo: src.repo,
+      source_url,
+      sample,
+      reason,
+      skipped_lines: parsed.skipped,
+      entries: parsed.entries,
+    };
+    schemas.evalsData.parse(file);
+    await writeFile(path.join(OUT, 'evals', `${src.id}.json`), JSON.stringify(file));
+    out.evals.push({
+      id: src.id,
+      sample,
+      reason,
+      entries: parsed.entries.length,
+      skipped_lines: parsed.skipped,
+    });
+    log(
+      `evals/${src.id}: ${sample ? `SAMPLE — ${reason}` : `live — ${parsed.entries.length} entries`}${
+        parsed.skipped ? ` (${parsed.skipped} invalid lines skipped)` : ''
+      }`,
+    );
+  }
+
+  await mkdir(path.join(OUT, 'case-studies'), { recursive: true });
+  const items = [];
+  for (const a of config.agents) {
+    const source_url = `https://github.com/${a.repo}/blob/${rf.branch}/${rf.case_studies}`;
+    let md = null;
+    let reason = null;
+    try {
+      md = await readRepoFile(a.id, a.repo, rf.case_studies);
+      if (!md.trim()) throw new Error(`${rf.case_studies} is empty`);
+      if (Buffer.byteLength(md) > MAX_MD_BYTES)
+        throw new Error(`${rf.case_studies} is over ${MAX_MD_BYTES / 1000} KB`);
+      if (/^\s*<(!doctype|html)/i.test(md)) throw new Error(`${rf.case_studies} is HTML, not Markdown`);
+    } catch (e) {
+      reason = e instanceof Fallback ? `${e.kind}: ${e.message}` : String(e?.message ?? e);
+      md = null;
+    }
+    const sample = md == null;
+    if (sample) md = await readFile(path.join(FIXTURES, 'case-studies', `${a.id}.md`), 'utf8');
+    const file = `case-studies/${a.id}.md`;
+    await writeFile(path.join(OUT, file), md);
+    items.push({ id: a.id, name: a.name, repo: a.repo, source_url, file, sample, reason });
+    log(`case-studies/${a.id}: ${sample ? `SAMPLE — ${reason}` : 'live'}`);
+  }
+  const index = { generated_at: generatedAt, items };
+  schemas.caseStudiesIndex.parse(index);
+  await writeFile(path.join(OUT, 'case-studies', 'index.json'), JSON.stringify(index));
+  out.case_studies = items.map(({ id, sample, reason }) => ({ id, sample, reason }));
+  return out;
+}
+
+async function printExtras(extras) {
+  const rows = [
+    ...extras.evals.map((e) => [
+      `evals/${e.id}`,
+      e.sample ? 'SAMPLE' : 'live',
+      e.sample ? e.reason : `${e.entries} entries`,
+    ]),
+    ...extras.case_studies.map((c) => [
+      `case-studies/${c.id}`,
+      c.sample ? 'SAMPLE' : 'live',
+      c.reason ?? 'ok',
+    ]),
+  ];
+  const w0 = Math.max(...rows.map((r) => r[0].length));
+  log(
+    `repo files (${config.repo_files.branch} branch): ${rows.filter((r) => r[1] === 'live').length}/${rows.length} live`,
+  );
+  for (const r of rows) console.log(`  ${r[0].padEnd(w0)}  ${r[1].padEnd(6)}  ${r[2]}`);
+  console.log('');
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    const esc = (x) => String(x).replace(/\|/g, '\\|');
+    const md = [
+      `### Evals and case studies (${config.repo_files.branch} branch)`,
+      '',
+      '| file | data | detail |',
+      '| --- | --- | --- |',
       ...rows.map((r) => `| ${r.map(esc).join(' | ')} |`),
       '',
     ].join('\n');

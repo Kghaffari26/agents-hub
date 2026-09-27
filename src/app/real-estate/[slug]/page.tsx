@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getAgent, getMetro, getRealEstateIndex } from '@/lib/data/server';
+import { getAgent, getEvals, getMetro, getRealEstateIndex, getTraceInfo } from '@/lib/data/server';
 import { RealEstatePage } from '@/components/real-estate/RealEstatePage';
 import { assetUrl, canonical } from '@/lib/data/url';
 import { formatMonth } from '@/lib/format';
@@ -36,13 +36,16 @@ export default async function MetroPage({ params }: { params: Promise<{ slug: st
   const idx = getRealEstateIndex();
   const m = idx.metros.find((x) => x.slug === slug);
   if (!m) notFound();
-  getMetro(slug); // validate the metro file at build time (fails the build if corrupt)
+  const detail = getMetro(slug); // validates the metro file at build time (fails the build if corrupt)
   return (
     <RealEstatePage
       index={idx}
+      focusInvestigation={detail.investigation}
       agent={getAgent('real_estate')}
       focusSlug={slug}
       title={`${m.name} housing market`}
+      trace={getTraceInfo('real_estate')}
+      evals={getEvals('real_estate')}
     />
   );
 }

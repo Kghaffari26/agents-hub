@@ -6,6 +6,7 @@ import type { TopMatch } from '@/lib/schemas/grants';
 import { currency, formatDate } from '@/lib/format';
 import { useNow } from '@/lib/hooks';
 import { FitMeter } from './FitMeter';
+import { BidResearch } from './BidResearch';
 import { RecommendationBadge, SourceBadge } from './badges';
 import { daysLeft, formatAgency, sourceLabel } from './grantsFilters';
 
@@ -201,6 +202,8 @@ export function MatchCard({ match, rank }: { match: TopMatch; rank?: number }) {
       ) : (
         <p className="border-t border-border pt-3 text-sm text-muted">No summary for this item yet.</p>
       )}
+
+      {match.research && <BidResearch research={match.research} title={match.title} />}
 
       <div className="mt-auto flex flex-wrap items-center justify-between gap-2 text-sm">
         <span className="text-xs text-muted">

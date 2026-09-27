@@ -13,3 +13,4 @@ public/og/
 public/sitemap.xml
 public/robots.txt
 .DS_Store
+__pycache__/

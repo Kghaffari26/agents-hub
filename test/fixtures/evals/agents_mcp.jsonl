@@ -1,0 +1,5 @@
+{"date":"2026-08-29","git_sha":"9f767c4","model":"claude-opus-5","scores":{"n":25,"tool_accuracy":0.87,"arg_accuracy":0.834,"fully_correct":0.808},"cost_usd":0.2221}
+{"date":"2026-09-05","git_sha":"a6eb8c9","model":"claude-opus-5","scores":{"n":25,"tool_accuracy":0.927,"arg_accuracy":0.861,"fully_correct":0.849},"cost_usd":0.2272}
+{"date":"2026-09-12","git_sha":"a623325","model":"claude-opus-5","scores":{"n":25,"tool_accuracy":0.922,"arg_accuracy":0.906,"fully_correct":0.895},"cost_usd":0.2234}
+{"date":"2026-09-19","git_sha":"617959c","model":"claude-opus-5","scores":{"n":25,"tool_accuracy":0.972,"arg_accuracy":0.963,"fully_correct":0.931},"cost_usd":0.1908}
+{"date":"2026-09-26","git_sha":"478c281","model":"claude-opus-5","scores":{"n":25,"tool_accuracy":0.987,"arg_accuracy":1.0,"fully_correct":0.996},"cost_usd":0.2181}

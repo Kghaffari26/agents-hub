@@ -8,8 +8,8 @@
       "repo": "Kghaffari26/real-estate-agent",
       "branch": "data",
       "route": "/real-estate",
-      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
-      "optional_files": ["schema.json"],
+      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json", "trace.json"],
+      "optional_files": ["schema.json", "trace.json"],
       "dynamic_files": { "from": "latest.json", "jsonpath": "metros[*].slug", "pattern": "metros/{}.json" }
     },
     {
@@ -18,8 +18,8 @@
       "repo": "Kghaffari26/fed-agent",
       "branch": "data",
       "route": "/macro",
-      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
-      "optional_files": ["schema.json"]
+      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json", "trace.json"],
+      "optional_files": ["schema.json", "trace.json"]
     },
     {
       "id": "grants",
@@ -27,8 +27,15 @@
       "repo": "Kghaffari26/sam-agent",
       "branch": "data",
       "route": "/grants",
-      "files": ["latest.json", "all.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
-      "optional_files": ["schema.json"]
+      "files": [
+        "latest.json",
+        "all.json",
+        "manifest-entry.json",
+        "costs-summary.json",
+        "schema.json",
+        "trace.json"
+      ],
+      "optional_files": ["schema.json", "trace.json"]
     },
     {
       "id": "repo_maint",
@@ -36,8 +43,22 @@
       "repo": "Kghaffari26/repo-maintain-agent",
       "branch": "data",
       "route": "/repos",
-      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json"],
-      "optional_files": ["schema.json"]
+      "files": ["latest.json", "manifest-entry.json", "costs-summary.json", "schema.json", "trace.json"],
+      "optional_files": ["schema.json", "trace.json"]
+    }
+  ],
+  "$comment_repo_files": "Files read from each repo's default branch (not its data branch), with a committed sample fallback per file: evals/history.jsonl (agents-core evals) and docs/case-studies.md. eval_sources adds non-agent repos to /about's evals.",
+  "repo_files": {
+    "branch": "main",
+    "evals": "evals/history.jsonl",
+    "case_studies": "docs/case-studies.md"
+  },
+  "eval_sources": [
+    {
+      "id": "agents_mcp",
+      "name": "Agents Hub MCP server",
+      "repo": "Kghaffari26/agents-mcp",
+      "default_suite": "tool_selection"
     }
   ]
 }

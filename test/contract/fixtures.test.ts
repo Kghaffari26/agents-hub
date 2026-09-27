@@ -10,7 +10,8 @@ const ROOT = 'test/fixtures';
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
-    if (dir === ROOT && f === 'real') return []; // real agent output: see real-fixtures.test.ts
+    // real agent output: see real-fixtures.test.ts; real excerpts: test/unit/agentic/contracts.test.ts
+    if (dir === ROOT && (f === 'real' || f === 'real-excerpts')) return [];
     const p = path.join(dir, f);
     return statSync(p).isDirectory() ? walk(p) : p.endsWith('.json') ? [p] : [];
   });

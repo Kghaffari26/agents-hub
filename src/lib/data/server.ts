@@ -7,6 +7,8 @@ import { realEstateLatest, metroDetail } from '../schemas/realEstate';
 import { macroLatest } from '../schemas/macro';
 import { grantsLatest } from '../schemas/grants';
 import { repoMaintLatest } from '../schemas/repoMaint';
+import { caseStudiesIndex, evalsData, trace, type TraceSummary } from '../schemas/agentic';
+import { existsSync } from 'node:fs';
 
 /**
  * Build-time loaders (SPEC_WEBSITE §8). Read from public/data (or DATA_DIR), validate with
@@ -56,4 +58,51 @@ export function getAgent(id: string) {
   const a = getManifest().agents.find((x) => x.id === id);
   if (!a) throw new DataValidationError(`manifest.json has no agent "${id}"`);
   return a;
+}
+
+/**
+ * Build-time facts about an agent's trace.json (the spans stay out of page props; the Run trace
+ * panel fetches the file when opened). Null when the agent hasn't published one.
+ */
+export interface TraceInfo {
+  runId: string;
+  summary: TraceSummary;
+  spans: number;
+  truncated: boolean;
+  droppedSpans: number;
+  path: string;
+}
+export function getTraceInfo(agentId: string): TraceInfo | null {
+  const rel = `${agentId}/trace.json`;
+  if (!existsSync(path.join(DATA_DIR, rel))) return null;
+  const t = loadJson(rel, trace);
+  return {
+    runId: t.run_id,
+    summary: t.summary,
+    spans: t.spans.length,
+    truncated: t.truncated,
+    droppedSpans: t.dropped_spans,
+    path: rel,
+  };
+}
+
+/** Eval history for an agent (or agents_mcp); null when fetch-data didn't write one. */
+export function getEvals(id: string) {
+  const rel = `evals/${id}.json`;
+  if (!existsSync(path.join(DATA_DIR, rel))) return null;
+  return loadJson(rel, evalsData);
+}
+
+export function getCaseStudies() {
+  const index = loadJson('case-studies/index.json', caseStudiesIndex);
+  return index.items.map((item) => {
+    const file = path.join(DATA_DIR, item.file);
+    let markdown: string;
+    try {
+      markdown = readFileSync(file, 'utf8');
+    } catch (e) {
+      throw new DataValidationError(`Case study ${file} could not be read: ${(e as Error).message}`);
+    }
+    return { ...item, markdown };
+  });
 }

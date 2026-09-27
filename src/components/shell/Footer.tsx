@@ -10,6 +10,7 @@ const ATTRIBUTION = [
   ['Federal Reserve Board', 'https://www.federalreserve.gov/'],
   ['SAM.gov', 'https://sam.gov/'],
   ['Grants.gov', 'https://www.grants.gov/'],
+  ['USAspending', 'https://www.usaspending.gov/'],
   ['GitHub', 'https://github.com/'],
 ] as const;
 

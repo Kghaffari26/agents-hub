@@ -10,6 +10,8 @@ export const NAV: NavItem[] = [
   { href: '/macro/', label: 'Macro', agentId: 'macro' },
   { href: '/grants/', label: 'Grants', agentId: 'grants' },
   { href: '/repos/', label: 'Repos', agentId: 'repo_maint' },
+  { href: '/case-studies/', label: 'Case studies' },
+  { href: '/mcp/', label: 'MCP' },
   { href: '/about/', label: 'About' },
 ];
 

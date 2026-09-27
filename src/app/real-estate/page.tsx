@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAgent, getRealEstateIndex } from '@/lib/data/server';
+import { getAgent, getEvals, getRealEstateIndex, getTraceInfo } from '@/lib/data/server';
 import { RealEstatePage } from '@/components/real-estate/RealEstatePage';
 import { canonical } from '@/lib/data/url';
 import { ogImages } from '@/lib/data/url';
@@ -18,5 +18,12 @@ export function generateMetadata(): Metadata {
 }
 
 export default function Page() {
-  return <RealEstatePage index={getRealEstateIndex()} agent={getAgent('real_estate')} />;
+  return (
+    <RealEstatePage
+      index={getRealEstateIndex()}
+      agent={getAgent('real_estate')}
+      trace={getTraceInfo('real_estate')}
+      evals={getEvals('real_estate')}
+    />
+  );
 }

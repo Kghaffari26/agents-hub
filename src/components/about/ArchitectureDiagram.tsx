@@ -20,9 +20,10 @@ export function ArchitectureDiagram() {
         <title id="arch-title">Agents Hub architecture</title>
         <desc id="arch-desc">
           Four agent repositories run on GitHub Actions schedules using the shared agents-core package. Each
-          publishes validated JSON to its own data branch and sends a repository_dispatch event. The
-          agents-hub site workflow fetches every data branch, validates the JSON against zod contracts, builds
-          a static Next.js export, and deploys it to GitHub Pages.
+          publishes validated JSON and a run trace to its own data branch and sends a repository_dispatch
+          event. The agents-mcp server reads the same data branches for Claude. The agents-hub site workflow
+          fetches every data branch, validates the JSON against zod contracts, builds a static Next.js export,
+          and deploys it to GitHub Pages.
         </desc>
         <defs>
           <marker
@@ -42,7 +43,7 @@ export function ArchitectureDiagram() {
           Agent repos (GitHub Actions cron)
         </text>
         <text x="32" y="62" {...m}>
-          Python · agents-core: cost cap, number guard, publish
+          Python · agents-core: agent loop, guards, traces, evals
         </text>
         {agents.map(([name, sub], i) => (
           <g key={name}>
@@ -62,21 +63,32 @@ export function ArchitectureDiagram() {
             />
           </g>
         ))}
-        <rect x="380" y="150" width="200" height="120" {...box} />
-        <text x="396" y="178" {...t}>
+        <rect x="380" y="140" width="200" height="140" {...box} />
+        <text x="396" y="166" {...t}>
           data branches
         </text>
-        <text x="396" y="200" {...m}>
+        <text x="396" y="188" {...m}>
           latest.json · history/
         </text>
-        <text x="396" y="218" {...m}>
+        <text x="396" y="206" {...m}>
           manifest-entry.json
         </text>
-        <text x="396" y="236" {...m}>
+        <text x="396" y="224" {...m}>
           costs-summary.json
         </text>
-        <text x="396" y="254" {...m}>
+        <text x="396" y="242" {...m}>
+          trace.json (spans)
+        </text>
+        <text x="396" y="260" {...m}>
           schema.json
+        </text>
+        <path d="M480,280 L 480,318" stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#arr)" />
+        <rect x="380" y="320" width="200" height="64" {...box} />
+        <text x="396" y="346" {...t}>
+          agents-mcp
+        </text>
+        <text x="396" y="366" {...m}>
+          read-only MCP server → Claude
         </text>
         <path d="M580,210 L 628,210" stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#arr)" />
         <text x="588" y="136" {...m}>

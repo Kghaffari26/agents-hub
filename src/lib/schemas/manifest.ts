@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { lenient, traceSummary } from './agentic';
 import { keyStat, runStatus, timestamp } from './common';
 
 /** One agent's `manifest-entry.json` (agents-core `ManifestEntry`). */
@@ -15,6 +16,8 @@ export const manifestEntry = z.object({
   key_stats: z.array(keyStat).max(4),
   run_cost_usd: z.number().nonnegative(),
   items_count: z.number().int().nullable().optional(),
+  /** agents-core v0.3.0; null/absent in older entries. */
+  trace_summary: lenient(traceSummary.nullable()),
 });
 export type ManifestEntry = z.infer<typeof manifestEntry>;
 

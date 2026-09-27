@@ -118,6 +118,22 @@ await render(
     subtitle: 'Numbers computed in code; the model writes the narrative',
   }),
 );
+await render(
+  'case-studies.png',
+  card({
+    kicker: 'Case studies',
+    title: 'What the agents did on real runs',
+    subtitle: 'Triggers, tool calls, guardrails, outcomes',
+  }),
+);
+await render(
+  'mcp.png',
+  card({
+    kicker: 'MCP server',
+    title: 'Ask Claude about the agents’ data',
+    subtitle: 'agents-mcp · read-only Model Context Protocol server',
+  }),
+);
 const idx = await read('real_estate/latest.json');
 for (const m of idx.metros) {
   const L = m.latest;
@@ -135,4 +151,4 @@ for (const m of idx.metros) {
     }),
   );
 }
-console.log(`[gen-og] wrote ${6 + idx.metros.length} images to ${OUT}/`);
+console.log(`[gen-og] wrote ${8 + idx.metros.length} images to ${OUT}/`);

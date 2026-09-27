@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAgent, getRepoMaint } from '@/lib/data/server';
+import { getAgent, getEvals, getRepoMaint, getTraceInfo } from '@/lib/data/server';
 import { canonical } from '@/lib/data/url';
 import { ogImages } from '@/lib/data/url';
 import { count } from '@/lib/format';
@@ -13,6 +13,9 @@ import { StalePrs } from '@/components/repos/StalePrs';
 import { ChangelogDraft } from '@/components/repos/ChangelogDraft';
 import { ActionsLog } from '@/components/repos/ActionsLog';
 import { RepoMethodology } from '@/components/repos/RepoMethodology';
+import { FixProposals } from '@/components/repos/FixProposals';
+import { RunTrace } from '@/components/trace/RunTrace';
+import { EvalsSection } from '@/components/evals/EvalsSection';
 import { MODE_EXPLANATION, avgHealth, shortName } from '@/components/repos/labels';
 
 export function generateMetadata(): Metadata {
@@ -95,6 +98,20 @@ export default function ReposPage() {
         <TriageTable repos={repos} mode={mode} />
       </section>
 
+      <section aria-labelledby="fixes-heading">
+        <SectionHeading id="fixes-heading">Fix proposals</SectionHeading>
+        <p className="mb-3 max-w-3xl text-sm text-muted">
+          For small, well-specified bugs in sandbox repos the agent drafts a patch with read-only tools and
+          checks that it applies. A draft pull request is opened only after a maintainer approves the
+          proposal.
+        </p>
+        <FixProposals
+          items={repos.flatMap((r) =>
+            (r.fix_proposals ?? []).map((proposal) => ({ repo: r.full_name, proposal })),
+          )}
+        />
+      </section>
+
       <section aria-labelledby="stale-heading">
         <SectionHeading id="stale-heading">Stale PRs</SectionHeading>
         <StalePrs repos={repos} />
@@ -122,6 +139,10 @@ export default function ReposPage() {
         <SectionHeading id="actions-heading">Actions log</SectionHeading>
         <ActionsLog actions={data.actions} mode={mode} />
       </section>
+
+      <RunTrace agent={agent} info={getTraceInfo('repo_maint')} />
+
+      <EvalsSection data={getEvals('repo_maint')} agentName="repo maintenance agent" />
 
       <RepoMethodology />
     </div>

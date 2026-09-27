@@ -1,0 +1,122 @@
+{
+ "source": "JSON examples from each agent spec on main, 2026-09-27 (comments stripped, ellipses kept as \"...\"): real-estate-agent a95534c SPEC_REAL_ESTATE \u00a76.3, sam-agent 095ca0b SPEC_GRANTS \u00a76.3, repo-maintain-agent bdf49cb SPEC_REPO_MAINT \u00a76.1",
+ "real_estate_investigation": {
+  "slug": "pittsburgh-pa",
+  "name": "Pittsburgh, PA",
+  "trigger": "top_mover",
+  "trigger_flag": null,
+  "trigger_label": "Median price +7.8% YoY",
+  "explanation": "4-6 sentences on why this is happening",
+  "cited_metrics": [
+   "median_sale_price",
+   "homes_sold",
+   "inventory"
+  ],
+  "narrative_source": "llm",
+  "model": "claude-haiku-4-5-20251001",
+  "stop_reason": "finished",
+  "steps": 4,
+  "tools_called": [
+   "get_metro_series",
+   "compare_to_peers",
+   "get_national_context"
+  ],
+  "cost_usd": 0.0192,
+  "prompt_version": "investigator-2026-09-27.4",
+  "generated_at": "2026-09-27T00:45:45Z",
+  "reused": false
+ },
+ "real_estate_investigations": [
+  {
+   "slug": "pittsburgh-pa",
+   "name": "Pittsburgh, PA",
+   "trigger": "top_mover",
+   "trigger_label": "Median price +7.8% YoY",
+   "summary": "The explanation's first sentence (\u2264 240 chars).",
+   "cited_metrics": [
+    "median_sale_price",
+    "homes_sold",
+    "inventory"
+   ],
+   "narrative_source": "llm",
+   "stop_reason": "finished"
+  }
+ ],
+ "grants_research": {
+  "status": "complete",
+  "stop_reason": "finished",
+  "narrative_source": "llm",
+  "what_theyre_buying": "...",
+  "evaluation_criteria": [
+   "Technical Approach",
+   "Past Performance",
+   "Price"
+  ],
+  "likely_incumbent": "ACME DIGITAL SERVICES LLC",
+  "incumbent_notes": "...",
+  "prior_awards": [
+   {
+    "award_id": "36C10B21C0045",
+    "recipient": "ACME DIGITAL SERVICES LLC",
+    "amount": 3412500.0,
+    "start_date": "2021-05-01",
+    "end_date": "2026-04-30",
+    "awarding_agency": "Department of Veterans Affairs",
+    "url": "https://www.usaspending.gov/award/CONT_AWD_36C10B21C0045_3600_-NONE-_-NONE-"
+   }
+  ],
+  "risks": [
+   "..."
+  ],
+  "go_no_go": "go",
+  "rationale": "...",
+  "citations": [
+   {
+    "source": "USAspending.gov",
+    "url": "https://www.usaspending.gov/award/...",
+    "note": "Prior award 36C10B21C0045"
+   }
+  ],
+  "tools_used": [
+   "get_opportunity",
+   "list_attachments",
+   "read_attachment",
+   "usaspending_prior_awards"
+  ],
+  "steps": 3,
+  "cost_usd": 0.0301,
+  "model": "claude-sonnet-5",
+  "prompt_version": "v1",
+  "researched_at": "2026-09-27T12:00:00Z"
+ },
+ "repo_fix_proposal": {
+  "id": "3f9a1c0b7e21",
+  "issue_number": 3,
+  "issue_url": "https://github.com/you/agents-hub-sandbox/issues/3",
+  "issue_title": "First page of the transaction list skips the first 10 rows",
+  "status": "proposed",
+  "reason": null,
+  "summary": "paginate() computed the start index from the page number instead of page - 1.",
+  "rationale": "Pages are 1-based, so page 1 must start at index 0.",
+  "narrative_source": "llm",
+  "diff": "--- a/ledgerlite/pagination.py\n+++ b/ledgerlite/pagination.py\n@@ ...",
+  "files_changed": [
+   "ledgerlite/pagination.py"
+  ],
+  "lines_added": 1,
+  "lines_removed": 1,
+  "pr_url": null,
+  "loop": {
+   "steps": 4,
+   "stop_reason": "finished",
+   "usd": 0.0129,
+   "tools_called": [
+    "search_code",
+    "read_file",
+    "propose_patch"
+   ]
+  },
+  "model": "claude-sonnet-5",
+  "proposed_at": "2026-09-27T14:02:11Z"
+ }
+}

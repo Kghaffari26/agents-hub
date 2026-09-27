@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -61,5 +61,78 @@ describe('fetch-data: live vs sample, with the reason', () => {
     expect(log).toMatch(/summary: 1\/4 agents live, 3 using sample data/);
     expect(log).toMatch(/real_estate\s+live\s+9\s+1\.0\.0/);
     expect(log).toMatch(/grants\s+SAMPLE\s+—\s+missing_file/);
+  });
+});
+
+describe('fetch-data: eval history and case studies from the default branch', () => {
+  const tmp = mkdtempSync(path.join(tmpdir(), 'fetch-repo-'));
+  const out = path.join(tmp, 'out');
+  // grants repo checkout: two valid history lines, one invalid, and a case-studies file.
+  const repo = path.join(tmp, 'sam-agent');
+  mkdirSync(path.join(repo, 'evals'), { recursive: true });
+  mkdirSync(path.join(repo, 'docs'), { recursive: true });
+  writeFileSync(
+    path.join(repo, 'evals', 'history.jsonl'),
+    [
+      JSON.stringify({
+        ts: '2026-09-20T10:00:00Z',
+        suite: 'fit_scoring',
+        scores: { recommendation_exact: 0.8 },
+        pass_rate: 0.7,
+        usd: 0.1,
+      }),
+      '{not json',
+      JSON.stringify({
+        ts: '2026-09-27T10:00:00Z',
+        suite: 'fit_scoring',
+        scores: { recommendation_exact: 0.85 },
+        pass_rate: 0.75,
+        usd: 0.1,
+      }),
+    ].join('\n'),
+  );
+  writeFileSync(path.join(repo, 'docs', 'case-studies.md'), '# Case studies\n\n## A real one\n\nText.\n');
+  // real_estate data: valid §6 body with a malformed agentic field → stays live, with a warning.
+  const re = path.join(tmp, 're');
+  cpSync('test/fixtures/real/real_estate', re, { recursive: true });
+  const latest = JSON.parse(readFileSync(`${re}/latest.json`, 'utf8'));
+  latest.investigations = [{ slug: 'austin-tx' }];
+  writeFileSync(`${re}/latest.json`, JSON.stringify(latest));
+
+  const log = execFileSync(
+    'node',
+    ['scripts/fetch-data.mjs', '--offline', '--local-repo', `grants=${repo}`, '--local', `real_estate=${re}`],
+    { env: { ...process.env, FETCH_OUT_DIR: out }, encoding: 'utf8' },
+  );
+  const report = JSON.parse(readFileSync(`${out}/_fetch-report.json`, 'utf8'));
+  afterAll(() => rmSync(tmp, { recursive: true, force: true }));
+
+  it('reads a repo checkout live, skipping invalid lines', () => {
+    const grants = JSON.parse(readFileSync(`${out}/evals/grants.json`, 'utf8'));
+    expect(grants).toMatchObject({ sample: false, skipped_lines: 1 });
+    expect(
+      grants.entries.map((e: { scores: { recommendation_exact: number } }) => e.scores.recommendation_exact),
+    ).toEqual([0.8, 0.85]);
+    expect(log).toMatch(/evals\/grants: live — 2 entries \(1 invalid lines skipped\)/);
+  });
+  it('falls back to sample evals and write-ups with the reason', () => {
+    const macro = JSON.parse(readFileSync(`${out}/evals/macro.json`, 'utf8'));
+    expect(macro.sample).toBe(true);
+    expect(macro.reason).toMatch(/offline/);
+    expect(macro.entries.length).toBeGreaterThan(4);
+    const idx = JSON.parse(readFileSync(`${out}/case-studies/index.json`, 'utf8'));
+    const byId = Object.fromEntries(idx.items.map((i: { id: string }) => [i.id, i]));
+    expect(byId.grants.sample).toBe(false);
+    expect(readFileSync(`${out}/case-studies/grants.md`, 'utf8')).toMatch(/A real one/);
+    expect(byId.macro.sample).toBe(true);
+    expect(report.extras.evals.find((e: { id: string }) => e.id === 'agents_mcp').sample).toBe(true);
+  });
+  it('a malformed agentic field is a warning, not a fallback; a missing trace is noted', () => {
+    const r = report.agents.find((a: { id: string }) => a.id === 'real_estate');
+    expect(r.sample).toBe(false);
+    expect(r.warnings.join('\n')).toMatch(/investigations doesn't match the documented shape/);
+    expect(r.warnings.join('\n')).toMatch(/no trace\.json yet/);
+    const idx = JSON.parse(readFileSync(`${out}/real_estate/latest.json`, 'utf8'));
+    expect(idx.investigations).toEqual([{ slug: 'austin-tx' }]); // file is copied as published; the site drops it on read
   });
 });

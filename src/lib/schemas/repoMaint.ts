@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { fixProposal, lenientArray } from './agentic';
 import { keyStat, narrativeSource, runMeta, timestamp } from './common';
 
 /** SPEC_REPO_MAINT §6. */
@@ -96,6 +97,8 @@ export const repo = z.object({
       cached: z.boolean(),
     })
     .nullable(),
+  /** §6.1 (schema 1.1.0): drafted fixes; a PR is only opened after a human approves the id. */
+  fix_proposals: lenientArray(fixProposal),
 });
 export type Repo = z.infer<typeof repo>;
 

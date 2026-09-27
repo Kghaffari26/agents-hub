@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { lenient, macroInvestigation } from './agentic';
 import { citation, columnar, goodDirection, isoDate, keyStat, narrativeSource, runMeta, statFormat, timestamp } from './common';
 
 /** SPEC_MACRO §6. */
@@ -134,5 +135,7 @@ export const macroLatest = z.object({
       facts: z.record(z.unknown()),
     }),
   ),
+  /** §6.1 (schema 1.1.0): the release investigator's latest "what's driving this" analysis. */
+  investigation: lenient(macroInvestigation.nullable()),
 });
 export type MacroLatest = z.infer<typeof macroLatest>;

@@ -12,7 +12,7 @@ const site = (
 ).replace(/\/+$/, '');
 const DATA = process.env.DATA_DIR ?? 'public/data';
 
-const routes = ['/', '/real-estate/', '/macro/', '/grants/', '/repos/', '/about/'];
+const routes = ['/', '/real-estate/', '/macro/', '/grants/', '/repos/', '/case-studies/', '/mcp/', '/about/'];
 let lastmod = new Date().toISOString().slice(0, 10);
 if (existsSync(`${DATA}/real_estate/latest.json`)) {
   const idx = JSON.parse(await readFile(`${DATA}/real_estate/latest.json`, 'utf8'));

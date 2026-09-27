@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { grantsResearch, lenient } from './agentic';
 import { goodDirection, isoDate, keyStat, narrativeSource, runMeta, timestamp } from './common';
 
 /** SPEC_GRANTS §6. */
@@ -58,6 +59,8 @@ export const topMatch = z.object({
       generated_at: timestamp,
     })
     .nullable(),
+  /** §6.3 (schema 1.1.0): bid research from sam-agent's research loop; null unless researched. */
+  research: lenient(grantsResearch.nullable()),
 });
 export type TopMatch = z.infer<typeof topMatch>;
 
@@ -122,6 +125,8 @@ export const grantsRow = z.object({
   url: z.string().url(),
   is_new: z.boolean(),
   in_top: z.boolean(),
+  /** §6.3: the item has bid research (in top_matches while it's in the top 20). */
+  has_research: z.boolean().optional().catch(undefined),
 });
 export type GrantsRow = z.infer<typeof grantsRow>;
 

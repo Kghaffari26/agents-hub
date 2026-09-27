@@ -1479,5 +1479,9 @@ if __name__ == "__main__":
     build_macro(datetime(2026, 9, 25, 14, 0, 5, tzinfo=UTC))
     build_grants(datetime(2026, 9, 26, 13, 0, 3, tzinfo=UTC))
     build_repo_maint(datetime(2026, 9, 26, 14, 0, 2, tzinfo=UTC))
+    # Agentic additions (trace.json, §6.x fields, evals, case studies) read what was just written.
+    import gen_agentic_fixtures
+
+    gen_agentic_fixtures.main()
     total = sum(p.stat().st_size for p in OUT.rglob("*.json"))
     print(f"fixtures written to {OUT.relative_to(ROOT)} ({total / 1024:.0f} KB)")

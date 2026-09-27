@@ -239,3 +239,35 @@ export function daysUntil(s: string | null | undefined, now: Date = new Date()):
 export function usd(x: Num): string {
   return isNum(x) ? `$${x.toFixed(2)}` : DASH;
 }
+
+/** Small LLM costs: "$0.0071", "$0.09", "$1.24". */
+export function usdPrecise(x: Num): string {
+  if (!isNum(x)) return DASH;
+  if (x === 0) return '$0';
+  if (Math.abs(x) < 0.01) return `$${x.toFixed(4)}`;
+  if (Math.abs(x) < 1) return `$${x.toFixed(3)}`;
+  return `$${x.toFixed(2)}`;
+}
+
+/** Latency: "340 ms", "1.2 s", "4 min 12 s". */
+export function duration(ms: Num): string {
+  if (!isNum(ms)) return DASH;
+  if (ms < 1000) return `${Math.round(ms)} ms`;
+  const s = ms / 1000;
+  if (s < 60) return `${s < 10 ? s.toFixed(1) : Math.round(s)} s`;
+  const m = Math.floor(s / 60);
+  const rest = Math.round(s - m * 60);
+  return rest ? `${m} min ${rest} s` : `${m} min`;
+}
+
+/** Eval score 0–1 → "86%" (one decimal under 10 points of a bound is not needed; whole points). */
+export function score(x: Num): string {
+  return isNum(x) ? `${Math.round(x * 100)}%` : DASH;
+}
+
+/** Score change in percentage points, signed: "+4 pts". */
+export function scoreDelta(x: Num): string {
+  if (!isNum(x)) return DASH;
+  const pts = Math.round(x * 100);
+  return pts === 0 ? '±0 pts' : `${pts > 0 ? '+' : MINUS}${Math.abs(pts)} pts`;
+}

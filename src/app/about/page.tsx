@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
-import { getCostSummary, getManifest } from '@/lib/data/server';
+import Link from 'next/link';
+import { getCostSummary, getEvals, getManifest } from '@/lib/data/server';
+import { EvalsBody, EvalsSampleNote } from '@/components/evals/EvalsSection';
 import { ArchitectureDiagram } from '@/components/about/ArchitectureDiagram';
 import { CostChart } from '@/components/about/CostChart';
 import { AGENT_REPOS } from '@/lib/nav';
@@ -19,18 +21,19 @@ export function generateMetadata(): Metadata {
 
 const HOW: Record<string, string> = {
   real_estate:
-    'Every Friday it downloads Redfin, Zillow, FRED and Census permit data for 50 metros, then computes year-over-year changes, percentile ranks, a relative market-temperature score, deterministic flags and mortgage payments in Python. Claude Haiku writes a short brief per metro and Claude Sonnet the national brief, using only those computed numbers. The output is an index file plus one lazy-loaded file per metro.',
+    'Every Friday it downloads Redfin, Zillow, FRED and Census permit data for 50 metros, then computes year-over-year changes, percentile ranks, a relative market-temperature score, deterministic flags and mortgage payments in Python. Claude Haiku writes a short brief per metro and Claude Sonnet the national brief, using only those computed numbers. For flagged metros an agent loop investigates why (e.g. new listings vs homes sitting longer) with a small tool budget. The output is an index file plus one lazy-loaded file per metro.',
   macro:
-    'Each weekday it pulls about 25 FRED series and the Federal Reserve’s FOMC statements, computes transforms, revisions and deterministic regime labels, and ranks “events” worth a sentence. Claude turns the top events into a cited “what changed” brief and reads each new FOMC statement against the previous one. Headlines come from templates, not the model.',
+    'Each weekday it pulls about 25 FRED series and the Federal Reserve’s FOMC statements, computes transforms, revisions and deterministic regime labels, and ranks “events” worth a sentence. Claude turns the top events into a cited “what changed” brief, reads each new FOMC statement against the previous one, and for notable moves runs a tool loop over component series and release text to explain what’s driving them. Headlines come from templates, not the model.',
   grants:
-    'Daily it screens SAM.gov contract notices and Grants.gov opportunities against a business profile with deterministic hard filters and a relevance pre-score. Candidates are scored on a five-part rubric by Claude through the Batch API (half price), with code-enforced caps. The top 20 get a fit summary, risks and next steps.',
+    'Daily it screens SAM.gov contract notices and Grants.gov opportunities against a business profile with deterministic hard filters and a relevance pre-score. Candidates are scored on a five-part rubric by Claude through the Batch API (half price), with code-enforced caps. The top 20 get a fit summary, risks and next steps, and the best matches a bid-research brief (incumbent, comparable awards, price range) from USAspending.',
   repo_maint:
-    'Daily it reads GitHub issues, PRs, checks and releases for the watched repos, computes health scores, stale PRs and TF-IDF duplicate candidates, and asks Claude to classify untriaged issues and draft changelogs. It runs in read-only report mode by default; apply mode is gated per repo.',
+    'Daily it reads GitHub issues, PRs, checks and releases for the watched repos, computes health scores, stale PRs and TF-IDF duplicate candidates, and asks Claude to classify untriaged issues and draft changelogs. It runs in read-only report mode by default; apply mode is gated per repo. For well-specified bugs it drafts a fix and runs the tests, but opening the pull request waits for a human.',
 };
 
 export default function AboutPage() {
   const costs = getCostSummary();
   const manifest = getManifest();
+  const evalSources = [...manifest.agents.map((a) => a.id), 'agents_mcp'].map(getEvals);
   return (
     <div className="max-w-none space-y-10 pb-4">
       <header className="space-y-3 pb-2 pt-8">
@@ -79,7 +82,16 @@ export default function AboutPage() {
           <a className="link" href="https://github.com/Kghaffari26/agents-core">
             Kghaffari26/agents-core
           </a>{' '}
-          (HTTP caching, per-run budget cap, number guard, publisher).
+          (HTTP caching, per-run budget cap, number guard, budgeted agent loop, tracing, evals, publisher).
+          The same data is available to Claude through{' '}
+          <Link className="link" href="/mcp/">
+            the agents-mcp server
+          </Link>
+          ; write-ups of individual runs are in{' '}
+          <Link className="link" href="/case-studies/">
+            case studies
+          </Link>
+          .
         </p>
       </section>
 
@@ -88,6 +100,40 @@ export default function AboutPage() {
           Costs
         </h2>
         <CostChart costs={costs} />
+      </section>
+
+      <section aria-labelledby="evals" className="space-y-3">
+        <h2 id="evals" className="section-title">
+          Evals
+        </h2>
+        <p className="max-w-3xl text-sm text-muted">
+          Latest scores and history from each repo&apos;s <code>evals/history.jsonl</code> (0–100%, higher is
+          better), including the MCP server&apos;s tool-selection eval.
+        </p>
+        <div className="grid gap-4 xl:grid-cols-2" data-testid="about-evals">
+          {evalSources.map(
+            (e) =>
+              e && (
+                <article
+                  key={e.id}
+                  className="card min-w-0 space-y-3 p-4"
+                  aria-labelledby={`about-evals-${e.id}`}
+                  data-testid="evals-section"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 id={`about-evals-${e.id}`} className="font-semibold">
+                      {e.name}
+                    </h3>
+                    {e.sample && <EvalsSampleNote data={e} />}
+                    <a className="link ml-auto text-xs" href={e.source_url}>
+                      history.jsonl
+                    </a>
+                  </div>
+                  <EvalsBody data={e} chartHeight={200} />
+                </article>
+              ),
+          )}
+        </div>
       </section>
 
       <section aria-labelledby="eng" className="space-y-3">
@@ -102,7 +148,15 @@ export default function AboutPage() {
             ],
             [
               'Evals',
-              'The grants and repo agents keep labeled eval sets (fit scores, triage classes) that run before prompt changes ship.',
+              'Every agent keeps labeled eval suites (agents-core evals: exact, numeric, trajectory and LLM-judge scorers). A pull request that changes a prompt runs them and fails on a regression; scores over time are charted below.',
+            ],
+            [
+              'Agent loops with budgets',
+              'Metro and release investigations, bid research and fix proposals run as tool-use loops with step, dollar and time budgets. Tool output is treated as untrusted data, and write actions (opening a PR) need human approval.',
+            ],
+            [
+              'Traces',
+              'Every run publishes a redacted trace: each LLM call, tool call, HTTP request and guard retry with its latency and cost. Each agent page has a Run trace panel.',
             ],
             [
               'Cost caps',

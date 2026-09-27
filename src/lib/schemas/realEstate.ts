@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { investigation, investigationSummary, lenient, lenientArray } from './agentic';
 import { citation, goodDirection, isoDate, keyStat, narrativeSource, runMeta, statFormat, timestamp } from './common';
 
 /** SPEC_REAL_ESTATE §6. */
@@ -145,6 +146,8 @@ export const realEstateLatest = z.object({
     }),
   ),
   sources: z.array(citation),
+  /** §6.3 (schema 1.1.0): metros the investigator explained this run, in target order. */
+  investigations: lenientArray(investigationSummary),
 });
 export type RealEstateLatest = z.infer<typeof realEstateLatest>;
 
@@ -188,5 +191,7 @@ export const metroDetail = z.object({
   }),
   series: seriesBlock,
   brief,
+  /** §6.3 (schema 1.1.0): the investigator's full explanation; null when not investigated. */
+  investigation: lenient(investigation.nullable()),
 });
 export type MetroDetail = z.infer<typeof metroDetail>;

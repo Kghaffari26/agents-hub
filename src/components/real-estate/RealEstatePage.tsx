@@ -11,6 +11,11 @@ import { Movers } from './Movers';
 import { Explorer, type ExplorerIndex } from './Explorer';
 import { REMethodology } from './REMethodology';
 import { defaultSelection } from './helpers';
+import { Investigations } from './Investigations';
+import { RunTrace } from '../trace/RunTrace';
+import { EvalsSection } from '../evals/EvalsSection';
+import type { TraceInfo } from '@/lib/data/server';
+import type { EvalsData, Investigation } from '@/lib/schemas/agentic';
 
 /** Shared by /real-estate and /real-estate/[slug]. */
 export function RealEstatePage({
@@ -18,11 +23,18 @@ export function RealEstatePage({
   agent,
   focusSlug,
   title = 'Real Estate',
+  trace,
+  evals,
+  focusInvestigation,
 }: {
   index: RealEstateLatest;
   agent: ManifestAgent;
   focusSlug?: string;
   title?: string;
+  trace: TraceInfo | null;
+  evals: EvalsData | null;
+  /** The focused metro's full investigation (from its metro file). */
+  focusInvestigation?: Investigation | null;
 }) {
   const explorerIndex: ExplorerIndex = {
     metric_registry: index.metric_registry,
@@ -69,6 +81,13 @@ export function RealEstatePage({
         reused={index.national.brief.reused}
       />
       <AlertsStrip alerts={index.alerts} metros={index.metros} />
+      <Investigations
+        items={index.investigations}
+        metros={index.metros}
+        registry={index.metric_registry}
+        focusSlug={focusSlug}
+        focus={focusInvestigation}
+      />
       <Suspense fallback={<Skeleton className="h-[760px]" label="Loading explorer" />}>
         <Explorer
           index={explorerIndex}
@@ -77,6 +96,8 @@ export function RealEstatePage({
           movers={<Movers movers={index.movers} />}
         />
       </Suspense>
+      <RunTrace agent={agent} info={trace} />
+      <EvalsSection data={evals} agentName="real estate agent" />
       <REMethodology index={index} />
     </div>
   );

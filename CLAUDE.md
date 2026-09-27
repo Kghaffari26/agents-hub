@@ -4,22 +4,24 @@ Static Next.js 15 site (App Router, `output: 'export'`) at the repo root. It hos
 
 ## Commands
 
-- `npm run fetch-data` — assemble `public/data/` from data branches (per-agent fixture fallback, `sample: true`; logs the reason per agent and a summary table). `--offline` = fixtures only; `--local <agent>=<dir>` reads an agent's run from disk.
+- `npm run fetch-data` — assemble `public/data/` from data branches (per-agent fixture fallback, `sample: true`; logs the reason per agent and a summary table), plus each repo's `main` `evals/history.jsonl` and `docs/case-studies.md` (per-file sample fallback). `--offline` = fixtures only; `--local <agent>=<dir>` reads an agent's run from disk; `--local-repo <id>=<dir>` reads evals/case studies from a checkout.
 - `node scripts/validate-data.mjs <agent> <dir>` — every contract issue in a real agent output folder. Real runs live trimmed in `test/fixtures/real/` (`scripts/trim_real_fixture.py`).
 - `npm run dev` / `npm run build` — both assemble fixtures first if `public/data` is missing.
 - `npm test -- --run` (Vitest) · `npm run e2e` (Playwright + axe on `out/`, served by `scripts/serve-out.mjs`) · `npm run lint` (eslint + prettier --check) · `npx tsc --noEmit`.
-- `npm run gen:fixtures` regenerates `test/fixtures/` deterministically; then `node scripts/fetch-data.mjs --offline`.
+- `npm run gen:fixtures` regenerates `test/fixtures/` deterministically (incl. `scripts/gen_agentic_fixtures.py`: traces, §6.x outputs, `evals/`, `case-studies/`); then `node scripts/fetch-data.mjs --offline`.
+- `FFMPEG=<path> node scripts/record-tour.mjs` re-records `docs/hero.gif` from `out/` (must stay < 3 MB).
 - Reproduce Pages paths: `BASE_PATH=/agents-hub npm run build && BASE_PATH=/agents-hub npm run e2e`.
 
 ## Rules
 
 - **Contracts:** `src/lib/schemas/*.ts` (hand-written zod matching each spec's §6) is what pages use. `meta` is agents-core `RunMeta` with passthrough (1.x, optional `warnings`, extra keys); bodies stay exact. Tolerated agent deviations carry a `TODO(<agent>)` and are listed in STATUS.md. Never hand-edit `src/types/generated/` or `src/lib/validators/generated/` (written by `gen:types`). If an agent's contract changes, update the zod schema, the fixture generator, and the contract tests together.
+- **Agentic fields** (`trace.json`, `trace_summary`, real-estate `investigations`/`investigation`, macro `investigation`, grants `top_matches[].research`, repo `repos[].fix_proposals`) are the agents' published §6.x shapes in `src/lib/schemas/agentic.ts`: always optional, attached with `lenient()`/`lenientArray()`, strict copies in `AGENTIC_FIELDS` for fetch-data warnings. Keep `docs/specs/AGENTIC_ADDITIONS.md` in step.
 - **Data URLs** only via `dataUrl()` / `assetUrl()` (`src/lib/data/url.ts`) — the site runs under `/agents-hub` on Pages.
 - **Build-time data** only through `src/lib/data/server.ts` loaders (validate + clear errors). Client data through `useJson` / `fetchJson` (`src/lib/data/client.ts`).
 - **Numbers:** format with `src/lib/format.ts`; missing → "—", never 0. Rate changes are pp, never %. Real-estate share metrics are 0–1 ratios (`{ isRatio: true }`).
 - **Deltas** use `<Delta>` / `deltaTone` with the metric's good direction (agent value wins over `src/lib/metrics.ts`); never color alone.
 - **Colors** come from CSS tokens in `src/app/globals.css`; charts read them with `useThemeColors()`.
-- **Performance:** keep Recharts/Leaflet behind `next/dynamic` (`ssr: false`); don't pass long series from server components into client props. Budgets: `/` ≤ 120 KB, `/real-estate` ≤ 250 KB first-load JS (see `next build` output).
+- **Performance:** keep Recharts/Leaflet behind `next/dynamic` (`ssr: false`); don't pass long series from server components into client props (trace spans and eval history are fetched client-side on demand). Budgets: `/` ≤ 120 KB, `/real-estate` ≤ 250 KB first-load JS (see `next build` output).
 - **A11y:** axe (serious/critical) must pass in both themes; every control keyboard-reachable; charts need an `aria-label` summary and a data-table toggle.
 - Never fail the build because an agent hasn't published — fall back to fixtures.
 - Log non-obvious choices as one line in `DECISIONS.md`.

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAgent, getMacro } from '@/lib/data/server';
+import { getAgent, getEvals, getMacro, getTraceInfo } from '@/lib/data/server';
 import { canonical } from '@/lib/data/url';
 import { ogImages } from '@/lib/data/url';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -10,6 +10,9 @@ import { LazyYieldCurve as YieldCurve } from '@/components/macro/LazyYieldCurve'
 import { FomcPanel } from '@/components/macro/FomcPanel';
 import { ReleaseCalendar } from '@/components/macro/ReleaseCalendar';
 import { MacroMethodology } from '@/components/macro/MacroMethodology';
+import { WhatsDriving } from '@/components/macro/WhatsDriving';
+import { RunTrace } from '@/components/trace/RunTrace';
+import { EvalsSection } from '@/components/evals/EvalsSection';
 import { fmtValue, stripSeries } from '@/components/macro/helpers';
 
 export function generateMetadata(): Metadata {
@@ -53,10 +56,13 @@ export default function MacroPage() {
         narrativeSource={data.brief.narrative_source}
         reused={!!data.brief.reused_from_run_id}
       />
+      <WhatsDriving investigation={data.investigation} indicators={indicators} />
       <IndicatorGrid indicators={indicators} />
       <YieldCurve data={data.yield_curve} />
       <FomcPanel fomc={data.fomc} />
       <ReleaseCalendar calendar={data.calendar} nextMeeting={data.fomc.next_meeting} names={names} />
+      <RunTrace agent={agent} info={getTraceInfo('macro')} />
+      <EvalsSection data={getEvals('macro')} agentName="macro agent" />
       <MacroMethodology events={data.events} />
     </div>
   );
