@@ -68,12 +68,25 @@ test('agentic outputs render on each agent page', async ({ page }) => {
     await expect(page.getByTestId('driving-trigger')).toContainText('Trigger:');
   }
 
-  const grants = data<{ top_matches: { research?: unknown }[] }>('grants/latest.json');
+  const grants = data<{ top_matches: { research?: { citations: { url: string }[] } | null }[] }>(
+    'grants/latest.json',
+  );
   await page.goto('grants/');
-  if (grants.top_matches.some((m) => m.research)) {
+  const research = grants.top_matches.find((m) => m.research)?.research;
+  if (research) {
     const br = page.getByTestId('bid-research').first();
     await br.locator('> summary').click();
-    await expect(br.getByTestId('usaspending-citations').getByRole('link').first()).toBeVisible();
+    // USAspending citations exist only when the agent found prior awards; otherwise the
+    // block cites what it did read (the notice, attachments) under "Other sources read".
+    const usaspending = research.citations.filter((c) => /usaspending\.gov/i.test(c.url));
+    if (usaspending.length) {
+      await expect(br.getByTestId('usaspending-citations').getByRole('link')).toHaveCount(usaspending.length);
+    } else {
+      await expect(br.getByTestId('usaspending-citations')).toHaveCount(0);
+    }
+    if (research.citations.length) {
+      await expect(br.locator(`a[href="${research.citations[0].url}"]`).first()).toBeVisible();
+    }
   }
 
   const repos = data<{ repos: { fix_proposals?: { status: string }[] }[] }>('repo_maint/latest.json');
