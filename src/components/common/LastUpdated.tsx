@@ -13,6 +13,7 @@ export interface LastUpdatedProps {
   intervalHours: number;
   /** The run found no new source data (meta.data_changed = false). */
   noNewData?: boolean;
+  /** Short form for cards that already show a status badge: no "no new data since", no stale badge. */
   compact?: boolean;
 }
 
@@ -34,7 +35,8 @@ export function LastUpdated({ at, dataChangedAt, intervalHours, noNewData, compa
         </time>
         {unchanged && dataChangedAt && !compact && <> · no new data since {formatShortDate(dataChangedAt)}</>}
       </span>
-      {stale && <AgentStatusBadge status="stale" />}
+      {/* Compact use sits next to the card's own status badge; don't show "Stale" twice. */}
+      {stale && !compact && <AgentStatusBadge status="stale" />}
     </span>
   );
 }
