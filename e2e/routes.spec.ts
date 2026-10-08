@@ -13,6 +13,12 @@ for (const route of ROUTES) {
 }
 
 test('overview shows 4 agent cards with statuses and relative times', async ({ page }) => {
+  // Pin the clock just after the newest run so the result doesn't depend on today's date (a
+  // stale card adds a second, "Stale" badge; that case is covered by the next test).
+  const runs = data<{ agents: { last_run_at: string }[] }>('manifest.json').agents.map((a) =>
+    Date.parse(a.last_run_at),
+  );
+  await page.clock.install({ time: new Date(Math.max(...runs) + 3_600_000) });
   await page.goto('');
   for (const id of ['real_estate', 'macro', 'grants', 'repo_maint']) {
     const card = page.getByTestId(`agent-card-${id}`);

@@ -36,7 +36,9 @@ Adopted from real-estate-agent's spec and schema (checked 2026-09-27 at `a95534c
 (`InvestigationSummary`): `{ slug, name, trigger (new_major_flag|top_mover), trigger_label, summary, cited_metrics[], narrative_source, stop_reason }`.
 Metro file (`Investigation`, null when not investigated): `{ slug, name, trigger, trigger_flag?, trigger_label, explanation, cited_metrics[], narrative_source, model?, stop_reason, steps, tools_called[], cost_usd, prompt_version, generated_at, reused }`.
 Up to 3 targets per run (new major flags, else the single top mover). /real-estate shows the summaries with each cited metric's
-current value and YoY; the metro page shows the full explanation and tool calls. (1.1.0 also adds `alerts[].metros`, ignored for now.)
+current value and YoY; the metro page shows the full explanation and tool calls.
+
+**Alert figures** — `latest.json` → `alerts[].metros[]` (`AlertMetro`: `{ slug, name, label, value?, severity }`); with it, `alerts[].label` is the group's threshold. The alerts strip shows each metro with its own figure (its label minus the words shared with the threshold, e.g. "−24% YoY"), major first then largest |value|, four inline and the rest under "+N more"; a major metro in a notable group is marked "major" in words. Without `metros` (1.0.0) the strip lists the slugs as before.
 
 ### macro — `latest.json` → `investigation` (SPEC_MACRO §6.1, **published by fed-agent**, schema 1.1.0)
 

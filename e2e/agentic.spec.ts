@@ -116,3 +116,19 @@ test('about charts eval history for every agent and the MCP server', async ({ pa
   await page.goto('about/');
   await expect(page.getByTestId('about-evals').getByTestId('evals-section')).toHaveCount(5);
 });
+
+test('real-estate alerts show each metro with its own figure', async ({ page }) => {
+  type Alert = { flag: string; severity: string; slugs: string[]; metros?: { slug: string }[] };
+  const idx = data<{ alerts: Alert[] }>('real_estate/latest.json');
+  const group = idx.alerts.find((a) => a.severity !== 'info' && a.metros?.length);
+  test.skip(!group, 'no alert figures in this data');
+  await page.goto('real-estate/');
+  const item = page.getByTestId('alerts-strip').locator(`[data-flag="${group!.flag}"]`);
+  const n = group!.metros!.length;
+  await expect(item.getByTestId('alert-metro')).toHaveCount(n);
+  await expect(item.getByTestId('alert-metro').first()).toContainText('%');
+  if (n > 4) {
+    await item.getByText(`+${n - 4} more`).click();
+    await expect(item.getByTestId('alert-metro').nth(n - 1)).toBeVisible();
+  }
+});

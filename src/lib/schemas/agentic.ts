@@ -204,6 +204,18 @@ export type CaseStudiesIndex = z.infer<typeof caseStudiesIndex>;
 /** `new_major_flag` | `top_mover` (unknown future triggers are kept as text). */
 const reTrigger = z.string();
 
+/** real-estate-agent `AlertMetro`: one metro in an alert group, with its own flag label and value. */
+export const alertMetro = z.object({
+  slug: z.string(),
+  name: z.string(),
+  /** This metro's own flag label, e.g. "Inventory -24% YoY". */
+  label: z.string(),
+  /** The flagged value as a ratio or diff (format depends on the flag). */
+  value: z.number().nullable().optional(),
+  severity: z.enum(['info', 'notable', 'major']).catch('notable'),
+});
+export type AlertMetro = z.infer<typeof alertMetro>;
+
 /** real-estate-agent `InvestigationSummary`: one entry of `latest.json` → `investigations`. */
 export const investigationSummary = z.object({
   slug: z.string(),
@@ -351,7 +363,7 @@ export type FixProposal = z.infer<typeof fixProposal>;
  */
 export const AGENTIC_FIELDS = {
   real_estate: {
-    'latest.json': { investigations: z.array(investigationSummary) },
+    'latest.json': { investigations: z.array(investigationSummary), 'alerts[].metros': z.array(alertMetro) },
     'metros/*.json': { investigation: investigation.nullable() },
   },
   macro: { 'latest.json': { investigation: macroInvestigation.nullable() } },

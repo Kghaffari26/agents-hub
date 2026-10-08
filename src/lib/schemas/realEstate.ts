@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { investigation, investigationSummary, lenient, lenientArray } from './agentic';
+import { alertMetro, investigation, investigationSummary, lenient, lenientArray } from './agentic';
 import { citation, goodDirection, isoDate, keyStat, narrativeSource, runMeta, statFormat, timestamp } from './common';
 
 /** SPEC_REAL_ESTATE §6. */
@@ -143,6 +143,8 @@ export const realEstateLatest = z.object({
       label: z.string(),
       severity: z.enum(['info', 'notable', 'major']),
       slugs: z.array(z.string()),
+      /** §6.3 (schema 1.1.0): each metro's own figure; `label` above is then the group's threshold. */
+      metros: lenientArray(alertMetro),
     }),
   ),
   sources: z.array(citation),

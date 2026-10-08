@@ -119,3 +119,34 @@ export function chartSummary(
 }
 
 export const LINE_COLORS = ['chart-1', 'chart-2', 'chart-3'] as const;
+
+/**
+ * A metro's own figure within an alert group: its flag label minus the words it shares with the
+ * group's threshold label ("Inventory -24% YoY" under "Inventory down ≥20% YoY" → "−24% YoY").
+ * Falls back to the whole label; ASCII minus before a digit becomes a typographic minus.
+ */
+export function alertFigure(groupLabel: string, metroLabel: string): string {
+  const g = groupLabel.split(/\s+/);
+  const m = metroLabel.split(/\s+/);
+  let i = 0;
+  while (i < g.length && i < m.length - 1 && g[i].toLowerCase() === m[i].toLowerCase()) i++;
+  const rest = m.slice(i).join(' ');
+  return rest.replace(/(^|[\s(])-(?=\d)/g, '$1−');
+}
+
+const SEVERITY_RANK = { major: 0, notable: 1, info: 2 } as const;
+
+/** Major first, then the largest absolute figure; stable otherwise. */
+export function sortAlertMetros<T extends { severity: keyof typeof SEVERITY_RANK; value?: number | null }>(
+  metros: T[],
+): T[] {
+  return metros
+    .map((m, i) => ({ m, i }))
+    .sort(
+      (a, b) =>
+        SEVERITY_RANK[a.m.severity] - SEVERITY_RANK[b.m.severity] ||
+        Math.abs(b.m.value ?? 0) - Math.abs(a.m.value ?? 0) ||
+        a.i - b.i,
+    )
+    .map((x) => x.m);
+}

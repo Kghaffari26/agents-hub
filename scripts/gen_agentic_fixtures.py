@@ -268,6 +268,18 @@ def build_real_estate() -> None:
         "summary": explanation.split(". ")[0] + ".", "cited_metrics": cited, "narrative_source": "llm",
         "stop_reason": "finished",
     }]
+    # §6.3 alert figures: the group label becomes the threshold, each metro carries its own flag
+    # label and value (from its metro file's flags), as real-estate-agent 1.1.0 publishes them.
+    thresholds = {"inventory_surge": "Inventory up ≥25% YoY", "price_decline": "Prices down ≥3% YoY"}
+    for a in latest["alerts"]:
+        a["label"] = thresholds.get(a["flag"], a["label"])
+        a["metros"] = []
+        for slug in a["slugs"]:
+            md = load(base / "metros" / f"{slug}.json")
+            f = next(x for x in md["flags"] if x["id"] == a["flag"])
+            value = next(iter(f["facts"].values()), None)
+            a["metros"].append({"slug": slug, "name": md["name"], "label": f["label"].replace("−", "-"),
+                                "value": value, "severity": f["severity"]})
     write(base / "latest.json", latest)
 
     def analyze(tb, an, t):

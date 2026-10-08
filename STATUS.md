@@ -2,6 +2,10 @@
 
 _Last updated 2026-09-27 (session 3: agentic additions — traces, evals, agent-loop outputs, case studies, MCP)._
 
+## 2026-10-08: real-estate alert figures
+
+The alerts strip on /real-estate now shows real-estate 1.1.0's `alerts[].metros`: the group label is the threshold ("Inventory up ≥25% YoY") and each metro gets its own figure ("Tampa +31% YoY"), major first then largest, with the rest under "+N more". It's read leniently like the other §6.x fields, and the sample data carries it. Also fixed a date-dependent e2e test (the overview card test now pins its clock after the newest run, since sample runs older than their interval add a "Stale" badge). Vitest **254 passed**, Playwright + axe **52 passed**, lint/typecheck clean, `/real-estate` first-load JS unchanged at 144 KB.
+
 ## Done
 
 SPEC_WEBSITE.md §16 steps 1–9, adapted to the multi-repo layout:
@@ -124,8 +128,9 @@ These are accepted by the site for now (each has a `TODO(<agent>)` in `src/lib/s
 
 ## Known gaps
 
+- real-estate-agent now has a `data` branch, but it holds only a failed run (2026-10-02: `manifest-entry.json` with `status: failed`, no `latest.json`), so the site still falls back to sample data for real estate (`missing_file`). It goes live on the first deploy after a successful run.
+
 - **No agent has a `data` branch yet**, so agent data, traces and the four agentic outputs are still sample data (badged). Evals and case studies are already live from each repo's `main`.
-- Real-estate 1.1.0's `alerts[].metros` (per-metro figures) isn't displayed yet (read and ignored).
 - Eval scores are shown as published (0–1 → %); suites whose scorer isn't a 0–1 average (e.g. agents-mcp's `n`) are shown as counts, not charted.
 - The README GIF is recorded against sample agent data; re-record with `scripts/record-tour.mjs` once agents publish.
 
