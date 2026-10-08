@@ -116,15 +116,19 @@ With the real outputs as `--local` sources the same table reads `4/4 agents live
 
 ## Agent-side fixes needed
 
-Status after the agents' 1.1.0 upgrades (2026-09-27): per their specs, **1** (repo-maint now publishes `"template"`, confirmed in its committed 1.1.0 run) and **2** (real-estate `delta_format` is now a standard `StatFormat`) are fixed agent-side. The site keeps both tolerances until each agent's `data` branch is live on 1.1.0, then they can be removed. 3 and 4 are unverified.
+Re-checked 2026-10-08 against each agent's `main` and `data` branch:
 
-These are accepted by the site for now (each has a `TODO(<agent>)` in `src/lib/schemas/` and a contract test), so they don't block live data, but the agents should fix them:
-
-1. **repo-maintain-agent** — `repos[].changelog.narrative_source` is `"deterministic"` (`agents/repo_maint/schema.py`: `Literal["llm", "deterministic"]`). agents-core and SPEC_REPO_MAINT §6 allow only `"llm" | "template"`. The site reads it as `"template"`. Fix: publish `"template"`.
-2. **real-estate-agent** — for `change_kind: diff` metrics, `delta_format` is `"<unit>_signed"` (`metrics.py` → `days_signed`, `months_signed`, or `diff_signed` with no unit), and `schema.py` types it as `str`. These aren't agents-core `StatFormat` values. The site maps `days_signed → days`, `months_signed → decimal1`, other `*_signed → null`. Fix: emit `days` / `decimal1` (or add the formats to agents-core's `StatFormat` first, then the site).
-3. **sam-agent** — with no Anthropic key, `agents-run grants` crashes: `scoring.score_opportunities` catches `LLMError` but the missing-key `RuntimeError` from the client escapes, and the runner publishes a `failed` manifest entry. Not a contract issue, but it means a missing secret takes the whole section down instead of degrading to unscored. (fed-agent has the same pattern at the agents-core level: only `LLMError` falls back to templates.)
-4. **real-estate-agent** — `state.py` writes `data/real_estate/state.json` at a fixed path instead of under `AGENTS_CORE_DATA_DIR`. Harmless in CI; noted because local runs with a custom data dir still modify the repo.
+1. **repo-maintain-agent `narrative_source: "deterministic"`** — fixed agent-side; its live `data` branch publishes `"template"`.
+2. **real-estate-agent `<unit>_signed` delta formats** — fixed agent-side (`metrics.py` emits standard `StatFormat`s). The site keeps both tolerances until real_estate's `data` branch is live and `test/fixtures/real/` is refreshed from it; then drop the `TODO(repo-maintain-agent)` / `TODO(real-estate-agent)` code in `src/lib/schemas/`.
+3. **Missing Anthropic key crashing runs** — fixed agent-side in all four (`llm_available` → template/unscored output + `meta.warnings`).
+   **Rejected key (401/403)** was still fatal: auth errors aren't `LLMError`s. That's why real_estate has failed every run since 2026-10-02 (`invalid x-api-key`). Fixed 2026-10-08: each agent now preflights the key with one free `models.list` call and degrades like a missing key, with a warning naming the secret (sam-agent also opens an ops alert). Pushed to `main` of real-estate-agent (4622e3d), sam-agent (4fba837) and fed-agent (f5c990f). **repo-maintain-agent: not pushed** — attaching it to the session was denied; the tested patch is `0001-Degrade-on-a-rejected-Anthropic-key-instead-of-crash.patch` (in the session scratchpad; it adds `llm_key_problem` in `agents/repo_maint/agent.py` plus a test, the same as the other three).
+4. **real-estate-agent state path** — fixed agent-side (`state.py` uses `settings.data_dir()`).
 5. Observed, not bugs: real_estate `payment_to_income` is null without `CENSUS_API_KEY`, and permits are skipped (Census file layout unverified); the site shows "—" for both. `manifest-entry.json`'s `last_data_change_at` is null on a first publish (the site handles it).
+
+**Secrets to fix (owner only — this is why two sections still show sample data):**
+
+- **real-estate-agent `ANTHROPIC_API_KEY`** is rejected by Anthropic (`401 invalid x-api-key`, run of 2026-10-02). With the fix above the next run publishes with template briefs and a warning; set a valid key to get LLM briefs back.
+- **fed-agent `FRED_API_KEY`** is rejected by FRED (`400` on all 25 series, every run 2026-09-28..10-07); a valid key works. Without FRED there's nothing to publish, so macro stays on sample data until the secret is fixed (fed-agent now fails fast and opens an ops alert saying so).
 
 ## Known gaps
 
