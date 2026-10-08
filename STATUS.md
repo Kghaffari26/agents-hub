@@ -128,7 +128,7 @@ These are accepted by the site for now (each has a `TODO(<agent>)` in `src/lib/s
 
 ## Known gaps
 
-- real-estate-agent now has a `data` branch, but it holds only a failed run (2026-10-02: `manifest-entry.json` with `status: failed`, no `latest.json`), so the site still falls back to sample data for real estate (`missing_file`). It goes live on the first deploy after a successful run.
+- real-estate-agent now has a `data` branch, but it holds only a failed run (2026-10-02T19:43Z, run `2026-10-02T19-43-13Z-730724`): its `trace.json` shows the fetch and transform phases succeeded, then the first LLM call (the 50-metro brief batch) got **401 `invalid x-api-key`** from Anthropic, which wasn't an `LLMError`, so the whole run failed and no `latest.json` was published; the site falls back to sample data (`missing_file`). The agent was fixed on 2026-10-08 (`4622e3d`: a rejected key now publishes template briefs with a warning instead of failing), but the repo's `ANTHROPIC_API_KEY` secret still needs replacing for AI briefs and investigations. The next run (Friday cron or a manual dispatch) will publish either way.
 
 - **No agent has a `data` branch yet**, so agent data, traces and the four agentic outputs are still sample data (badged). Evals and case studies are already live from each repo's `main`.
 - Eval scores are shown as published (0–1 → %); suites whose scorer isn't a 0–1 average (e.g. agents-mcp's `n`) are shown as counts, not charted.
