@@ -14,9 +14,15 @@ test('macro: indicators, revision badge, yield curve, FOMC diff', async ({ page 
   else await expect(page.getByTestId('revision-badge')).toHaveCount(0);
   await page.getByRole('status').filter({ hasText: 'Loading yield curve' }).scrollIntoViewIfNeeded();
   await expect(page.getByTestId('yield-curve')).toBeVisible();
-  const diff = page.getByTestId('statement-diff');
-  await expect(diff.locator('ins').first()).toBeVisible();
-  await expect(diff.locator('del').first()).toBeVisible();
+  // The diff needs a latest and a previous statement that differ; a live run may lack either.
+  const fomc = data<{ fomc: { latest: { latest_text: string; previous_text: string | null } | null } }>(
+    'macro/latest.json',
+  ).fomc.latest;
+  if (fomc?.previous_text && fomc.previous_text !== fomc.latest_text) {
+    const diff = page.getByTestId('statement-diff');
+    await expect(diff.locator('ins').first()).toBeVisible();
+    await expect(diff.locator('del').first()).toBeVisible();
+  }
 });
 
 test('grants: closing ≤14d + min fit 70, sort by deadline, export CSV matches visible rows', async ({
